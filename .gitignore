@@ -1,0 +1,9 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Claude Code tooling + installed skills (not part of the website)
+.claude/
+
+# dependencies (only if you add a build step later)
+node_modules/

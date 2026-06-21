@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" class="preload">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Meridian Build — design-led construction studio. Private residences and developments, from first sketch to keys." />
+  <meta name="theme-color" content="#05080F" />
+  <title>Meridian Build — Architecture &amp; Construction</title>
+
+  <!-- Fonts: Cinzel (display) + Josefin Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/styles.css?v=4" />
+  <!-- keep hero hidden until intro plays, but only when JS is available -->
+  <script>document.documentElement.classList.add("preload");</script>
+</head>
+<body>
+
+  <!-- ================= NAV ================= -->
+  <header class="nav" id="nav">
+    <a class="nav-logo" id="nav-logo" href="#home" aria-label="Home"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Primary"></nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="home">
+    <canvas id="scene-canvas" aria-hidden="true"></canvas>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="container">
+        <p class="hero-eyebrow" id="hero-eyebrow"></p>
+        <h1 id="hero-title"></h1>
+        <p class="hero-summary" id="hero-summary"></p>
+        <div class="hero-actions" id="hero-actions"></div>
+        <div class="hero-stats" id="hero-stats"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="section" id="about">
+    <div class="container about-grid">
+      <div class="about-copy">
+        <p class="eyebrow" id="about-eyebrow" data-reveal></p>
+        <h2 class="section-title" id="about-title" data-reveal data-reveal-delay="1"></h2>
+        <div id="about-copy"></div>
+      </div>
+      <div class="about-media" data-reveal data-reveal-delay="1">
+        <img id="about-image" alt="A Meridian Build project" loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PORTFOLIO ================= -->
+  <section class="section" id="portfolio">
+    <div class="container">
+      <div class="portfolio-head">
+        <div>
+          <p class="eyebrow" id="portfolio-eyebrow" data-reveal></p>
+          <h2 class="section-title" id="portfolio-title" data-reveal data-reveal-delay="1"></h2>
+          <p class="lead" id="portfolio-subtitle" data-reveal data-reveal-delay="2" style="margin-top:14px"></p>
+        </div>
+        <div class="filters" id="filters" data-reveal data-reveal-delay="2"></div>
+      </div>
+      <div class="projects-grid" id="projects-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="section" id="contact">
+    <div class="container contact-grid">
+      <div class="contact-info">
+        <p class="eyebrow" id="contact-eyebrow" data-reveal></p>
+        <h2 class="section-title" id="contact-title" data-reveal data-reveal-delay="1"></h2>
+        <p id="contact-text" data-reveal data-reveal-delay="1" style="margin-top:18px"></p>
+        <ul class="contact-list" id="contact-list" data-reveal data-reveal-delay="2"></ul>
+      </div>
+      <form class="form" id="contact-form" data-reveal data-reveal-delay="2">
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for="f-msg">About your project</label>
+          <textarea id="f-msg" name="message" required placeholder="Site location, type of build, rough timeline…"></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit" style="justify-content:center">Send enquiry</button>
+        <p class="form-note">We reply to every enquiry within two working days.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo" id="footer-logo"></div>
+          <p id="footer-blurb" style="margin-top:16px"></p>
+        </div>
+        <div class="footer-cols" id="footer-cols" style="display:contents"></div>
+      </div>
+      <div class="footer-bottom">
+        <span id="footer-copy"></span>
+        <span>Built with care · Procedural 3D, no heavy assets</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <!-- 1) config + theme load first (plain scripts, set globals) -->
+  <script src="assets/js/config.js?v=3"></script>
+  <script src="assets/js/theme.js?v=3"></script>
+  <script src="assets/js/placeholder.js"></script>
+  <!-- 2) Three.js module resolution for the 3D hero scene -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <!-- 3) page logic + 3D scene (ES modules, deferred automatically) -->
+  <script type="module" src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/scene.js?v=7"></script>
+</body>
+</html>

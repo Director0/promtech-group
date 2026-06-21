@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Project — Meridian Build" />
+  <meta name="theme-color" content="#05080F" />
+  <title>Project — Meridian Build</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css?v=4" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <a class="nav-logo" id="nav-logo" href="index.html" aria-label="Home"></a>
+    <nav class="nav-links" id="nav-links" aria-label="Primary"></nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </header>
+
+  <!-- FULL-WIDTH HERO (image or video) -->
+  <section class="project-hero" id="project-hero"></section>
+
+  <!-- BODY -->
+  <main class="section">
+    <div class="container project-body" id="project-body"></div>
+  </main>
+
+  <!-- NEXT PROJECT -->
+  <section class="next-project" id="next-project"></section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo" id="footer-logo"></div>
+          <p id="footer-blurb" style="margin-top:16px"></p>
+        </div>
+        <div class="footer-cols" id="footer-cols" style="display:contents"></div>
+      </div>
+      <div class="footer-bottom">
+        <span id="footer-copy"></span>
+        <span><a href="index.html#portfolio">All projects →</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <img id="lightbox-img" alt="Enlarged project image" />
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="assets/js/config.js?v=3"></script>
+  <script src="assets/js/theme.js?v=3"></script>
+  <script src="assets/js/placeholder.js"></script>
+  <script type="module" src="assets/js/project.js?v=2"></script>
+</body>
+</html>
