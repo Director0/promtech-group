@@ -25,12 +25,16 @@ function col(v, fb) { try { return new THREE.Color(v || fb); } catch { return ne
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 function boot() {
-  const navy = col(THEME.navy, "#0D2150");
-  const navyLight = col(THEME.navyLight, "#1B3F86");
-  const gold = col(THEME.gold, "#D4A95C");
-  const goldSoft = col(THEME.goldSoft, "#F1D7A0");
-  const bg = col(THEME.bg, "#04060C");
+  // read the *live* theme (CSS vars set by theme.js) so the scene matches light/dark
+  const css = getComputedStyle(document.documentElement);
+  const cv = (n, fb) => { const v = css.getPropertyValue(n).trim(); return col(v || fb, fb); };
+  const navy = cv("--navy", THEME.navy || "#0D2150");
+  const navyLight = cv("--navy-light", THEME.navyLight || "#1B3F86");
+  const gold = cv("--gold", THEME.gold || "#D4A95C");
+  const goldSoft = cv("--gold-soft", THEME.goldSoft || "#F1D7A0");
+  const bg = cv("--bg", THEME.bg || "#04060C");
   const blue = navyLight.clone().lerp(new THREE.Color(0x8fd0ff), 0.6);
+  const lum = (c) => 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
   const intensity = typeof CFG.intensity === "number" ? CFG.intensity : 1.0;
 
   /* ---------- renderer ---------- */
@@ -190,8 +194,18 @@ function boot() {
 
   document.documentElement.classList.add("scene-ready");
 
-  // debug handle
+  // keep fog + stars in sync with the active theme (light = white bg)
   window.__SCENE = { scene, camera, cubeGroup, renderer, frame, camBase, camTarget };
+  window.__SCENE.applyTheme = function (c) {
+    try {
+      const nb = col(c.bg, "#04060C");
+      scene.fog.color.set(nb);
+      const lightBg = lum(nb) > 0.5;
+      stars.material.color.set(lightBg ? new THREE.Color("#9aa7bd") : new THREE.Color(0xbcc8e6));
+      stars.material.opacity = lightBg ? 0.10 : 0.65;
+    } catch (e) {}
+  };
+  window.__SCENE.applyTheme({ bg: css.getPropertyValue("--bg").trim() || "#04060C" });
   window.__sceneInfo = function () {
     const b = new THREE.Box3().setFromObject(cubeGroup);
     const r2 = (v) => [v.x, v.y, v.z].map(n => +n.toFixed(2));

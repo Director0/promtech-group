@@ -34,6 +34,20 @@ window.SITE_CONFIG = {
       muted:     "#97AAC6", // secondary text (bluish to match navy)
       line:      "rgba(212,169,92,0.20)" // hairline borders
     },
+
+    // LIGHT THEME — overrides applied when the user flips the toggle.
+    // White background; the accent (buttons, eyebrows) becomes deep navy.
+    light: {
+      bg:        "#FFFFFF", // white page background
+      bgElevated:"#F2F5FA", // cards / elevated surfaces
+      navy:      "#0D2150", // brand navy (kept)
+      navyLight: "#1B3F86",
+      gold:      "#0D2150", // ACCENT → deep navy (buttons, highlights)
+      goldSoft:  "#21407E", // lighter navy for hovers / glows
+      text:      "#0D1B2E", // near-navy text
+      muted:     "#566179", // muted slate
+      line:      "rgba(13,33,80,0.16)" // navy hairline borders
+    },
     fonts: {
       // Loaded from Google Fonts in the HTML <head>.
       // To use different fonts: change these AND the <link> in index.html / project.html.
@@ -46,8 +60,13 @@ window.SITE_CONFIG = {
      2) BRAND
      ------------------------------------------------------------------------ */
   brand: {
-    name: "Promtech",          // shown in the navbar
-    nameAccent: "Group",       // colored part of the logo
+    name: "Promtech",          // text fallback (used if no logo image is set)
+    nameAccent: "Group",       // colored part of the text fallback
+    // HEADER LOGO — set the image source here. Leave logo "" to use the text name.
+    logo:      "assets/img/logo.svg",        // shown on the DARK theme (and as default)
+    logoLight: "assets/img/logo-light.svg",  // shown on the LIGHT theme (optional; falls back to logo)
+    logoAlt:   "Promtech Group",             // accessible alt text
+    logoHeight: 26,                          // rendered logo height in px
     tagline: "Architecture & Construction",
     year: 2026
   },
@@ -61,22 +80,22 @@ window.SITE_CONFIG = {
     { label: "Проекты",  href: "#portfolio" },
     { label: "Связаться",   href: "#contact" }
   ],
-  navCta: { label: "Start a project", href: "#contact" },
+  navCta: { label: "Заказать проект", href: "#contact" },
 
   /* ---------------------------------------------------------------------------
      4) HERO — first screen. Quick summary of the company sits over the 3D scene.
      ------------------------------------------------------------------------ */
   hero: {
-    eyebrow: "Осн. 2014 · 100+ успешных проектов",
+    eyebrow: "Группа компаний «Промтехнология»",
     titleLines: ["Мы создаем", "будущее, которое", "вдохновляет."],
     summary:
-      "Meridian Build is a design-led construction studio crafting private residences " +
-      "and developments from first sketch to handover of the keys. Precision engineering, " +
-      "honest materials, and a finish you can feel in the dark.",
+      "Разрабатываем проекты, которые объединяют архитектуру и инженерную точность. " +
+      "Продумываем каждую деталь, чтобы создавать пространства, отвечающие современным " +
+      "требованиям качества, комфорта и долговечности.",
     primaryCta:   { label: "Наши проекты", href: "#portfolio" },
     secondaryCta: { label: "Написать нам",    href: "#contact" },
     stats: [
-      { value: 12,  suffix: "+",  label: "Лет в работе" },
+      { value: 12,  suffix: "+",  label: "Лет на рынке" },
       { value: 142, suffix: "",   label: "Объекта в эксплуатации" },
       { value: 38,  suffix: "+",   label: "Городов" },
       { value: 100, suffix: "%",  label: "On-time handover" }
@@ -100,6 +119,11 @@ window.SITE_CONFIG = {
   },
 
   /* ---------------------------------------------------------------------------
+     5b) CUSTOM CURSOR — glass pointer (desktop only). Set enabled:false to disable.
+     ------------------------------------------------------------------------ */
+  cursor: { enabled: true },
+
+  /* ---------------------------------------------------------------------------
      6) ABOUT
      ------------------------------------------------------------------------ */
   about: {
@@ -114,10 +138,10 @@ window.SITE_CONFIG = {
       "поэтому сопровождаем каждый объект с максимальной ответственностью на всех этапах его реализации."
     ],
     values: [
-      { title: "Design-led", text: "Architects and builders in the same room from day one." },
-      { title: "Fixed timelines", text: "Milestone schedule agreed before the first dig." },
-      { title: "Honest materials", text: "Stone, timber and steel chosen to age gracefully." },
-      { title: "Single point of contact", text: "One project lead, start to keys." }
+      { title: "Деятельность 1", text: "текст..." },
+      { title: "Деятельность 2", text: "текст..." },
+      { title: "Деятельность 3", text: "текст..." },
+      { title: "Деятельность 4", text: "текст..." }
     ],
     image: "./assets/models/hq.png"
   },
@@ -145,20 +169,20 @@ window.SITE_CONFIG = {
   portfolio: {
     eyebrow: "Портфолио",
     title: "Проекты",
-    subtitle: "A few of the homes and developments we've delivered. Tap any project for the full story.",
+    subtitle: "Пространства, где инженерная точность встречается с эстетикой. Приглашаем изучить проектные решения для жилых, коммерческих и общественных объектов, разработанные ГК «Промтех Групп».",
     filtersEnabled: true
   },
 
   projects: [
     {
-      id: "villa-aurora",
-      title: "Villa Aurora",
-      category: "Private Residence",
+      id: "bof-yrkina",
+      title: "Жилой дом на ул. Юркина",
+      category: "Жилые здания",
       year: "2024",
-      location: "Lakeside, Geneva",
-      status: "Completed",
+      location: "г. Оренбург, Россия",
+      status: "В эксплуатации",
       summary: "A glass-and-stone family home that follows the sun across the lake.",
-      thumb: "https://picsum.photos/seed/villa-aurora/900/1100",
+      thumb: "./assets/projects/bof-yrkina/th.png",
       heroType: "image",
       heroSrc: "https://picsum.photos/seed/villa-aurora-hero/1920/1080",
       intro:
@@ -194,19 +218,19 @@ window.SITE_CONFIG = {
       ]
     },
     {
-      id: "the-foundry",
-      title: "The Foundry",
-      category: "Mixed-Use Development",
-      year: "2023",
-      location: "Docklands, Rotterdam",
+      id: "osg-storage",
+      title: "Складской комплекс ОСГ-РМ",
+      category: "Промышленность",
+      year: "2024",
+      location: "г. Солнечногорск, МО, Россия",
       // This project uses a VIDEO as its full-width thumbnail.
       // Swap heroSrc for your own .mp4 and heroPoster for a still frame.
-      heroType: "video",
+      heroType: "image",
       // Demo clip only — replace with your own project film (drone flyover, build timelapse…).
-      heroSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      heroPoster: "https://picsum.photos/seed/foundry-hero/1920/1080",
+      heroSrc: "./assets/projects/osg-storage/th.png",
+      heroPoster: "./assets/projects/osg-storage/th.png",
       category2: "",
-      thumb: "https://picsum.photos/seed/foundry/900/1100",
+      thumb: "./assets/projects/osg-storage/th.png",
       year2: "",
       location2: "",
       status: "Completed",
@@ -241,16 +265,16 @@ window.SITE_CONFIG = {
       ]
     },
     {
-      id: "ridge-house",
-      title: "Ridge House",
-      category: "Private Residence",
-      year: "2024",
-      location: "Dolomites, Italy",
-      status: "Completed",
+      id: "bof-sd20a",
+      title: "Жилой комплекс в 20а мкрн.",
+      category: "Жилые здания",
+      year: "2025",
+      location: "г. Оренбург, Россия",
+      status: "Строится",
       summary: "A timber home that disappears into the mountain ridge.",
-      thumb: "https://picsum.photos/seed/ridge/900/1100",
+      thumb: "./assets/projects/bof-sd20a/th.png",
       heroType: "image",
-      heroSrc: "https://picsum.photos/seed/ridge-hero/1920/1080",
+      heroSrc: "./assets/projects/bof-sd20a/th.png",
       intro:
         "A low, larch-clad residence built along a 1,600 m ridge line, engineered to shrug off heavy " +
         "snow loads while framing the valley through a single 9-metre window.",
@@ -282,16 +306,16 @@ window.SITE_CONFIG = {
       ]
     },
     {
-      id: "courtyard-44",
-      title: "Courtyard 44",
-      category: "Residential Development",
-      year: "2022",
-      location: "Eixample, Barcelona",
-      status: "Completed",
+      id: "bof-karagand",
+      title: "Жилой дом на ул. Карагандинской",
+      category: "Жилые здания",
+      year: "2026",
+      location: "г. Оренбург, Россия",
+      status: "Строится",
       summary: "Eight townhouses arranged around a shared green courtyard.",
-      thumb: "https://picsum.photos/seed/courtyard/900/1100",
+      thumb: "./assets/projects/bof-karagand/th.png",
       heroType: "image",
-      heroSrc: "https://picsum.photos/seed/courtyard-hero/1920/1080",
+      heroSrc: "./assets/projects/bof-karagand/render1.png",
       intro:
         "A small infill development of eight family townhouses that turn their backs on the street and " +
         "open onto a shared, planted courtyard — a quiet block within the block.",
@@ -322,16 +346,16 @@ window.SITE_CONFIG = {
       ]
     },
     {
-      id: "harbor-pavilion",
-      title: "Harbor Pavilion",
-      category: "Commercial",
-      year: "2023",
-      location: "Porto, Portugal",
-      status: "Completed",
+      id: "bof-muravlenko",
+      title: "Жилой комплекс «Арктик»",
+      category: "Жилые здания",
+      year: "2026",
+      location: "г. Муравленко, Россия",
+      status: "Строится",
       summary: "A waterfront restaurant under a single folded-concrete roof.",
-      thumb: "https://picsum.photos/seed/harbor/900/1100",
+      thumb: "./assets/projects/bof-muravlenko/th.jpg",
       heroType: "image",
-      heroSrc: "https://picsum.photos/seed/harbor-hero/1920/1080",
+      heroSrc: "./assets/projects/bof-muravlenko/render1.jpg",
       intro:
         "A 300-seat waterfront restaurant sheltered beneath one continuous folded-concrete roof that " +
         "cantilevers 7 metres over the quay.",
@@ -402,12 +426,12 @@ window.SITE_CONFIG = {
      8) CONTACT + FOOTER
      ------------------------------------------------------------------------ */
   contact: {
-    eyebrow: "Let's build",
+    eyebrow: "Открыты вашим идеям",
     title: "Have a site, a sketch, or just an idea?",
-    text: "Tell us about your project. We take on a limited number of builds each year and reply to every enquiry within two working days.",
-    email: "studio@meridianbuild.com",
-    phone: "+41 22 000 00 00",
-    address: "Rue du Lac 44, 1207 Geneva, Switzerland",
+    text: "Расскажите нам о своем проекте. Будем рады сотрудничеству. Срок обработки заявок: не более 2-ух рабочих дней.",
+    email: "stolpovskij@mail.ru",
+    phone: "+7 922 895 77 11",
+    address: "ул. Терешковой, 103, 460018, Оренбург, Россия",
     formAction: "" // leave empty for demo; add your endpoint to receive submissions
   },
 
