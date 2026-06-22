@@ -35,10 +35,22 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", onScroll, { passive: true });
 });
 
+/* logo markup: image (with optional light variant) if a source is set, else text */
+function brandLogoHTML(b) {
+  if (b.logo) {
+    const h = b.logoHeight ? ` style="height:${Number(b.logoHeight)}px"` : "";
+    const alt = esc(b.logoAlt || b.name || "");
+    const lightSrc = b.logoLight || b.logo;
+    return `<img class="logo-img logo-dark" src="${esc(b.logo)}" alt="${alt}"${h}>` +
+           `<img class="logo-img logo-light" src="${esc(lightSrc)}" alt="${alt}"${h}>`;
+  }
+  return `${esc(b.name || "")}<span class="text-gold">${esc(b.nameAccent || "")}</span>`;
+}
+
 /* ---------- shared nav / footer ---------- */
 function buildNav() {
   const b = C.brand || {};
-  $("#nav-logo").innerHTML = `${esc(b.name || "")}<span class="text-gold">${esc(b.nameAccent || "")}</span>`;
+  $("#nav-logo").innerHTML = brandLogoHTML(b);
   const links = (C.nav || []).map(n => {
     const href = n.href.startsWith("#") ? `index.html${n.href}` : n.href;
     return `<a href="${esc(href)}">${esc(n.label)}</a>`;

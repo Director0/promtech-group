@@ -29,10 +29,22 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollSpy();
 });
 
+/* logo markup: image (with optional light variant) if a source is set, else text */
+function brandLogoHTML(b) {
+  if (b.logo) {
+    const h = b.logoHeight ? ` style="height:${Number(b.logoHeight)}px"` : "";
+    const alt = esc(b.logoAlt || b.name || "");
+    const lightSrc = b.logoLight || b.logo;
+    return `<img class="logo-img logo-dark" src="${esc(b.logo)}" alt="${alt}"${h}>` +
+           `<img class="logo-img logo-light" src="${esc(lightSrc)}" alt="${alt}"${h}>`;
+  }
+  return `${esc(b.name || "")}<span class="text-gold">${esc(b.nameAccent || "")}</span>`;
+}
+
 /* ---------- NAV ---------- */
 function buildNav() {
   const b = C.brand || {};
-  $("#nav-logo").innerHTML = `${esc(b.name || "")}<span class="text-gold">${esc(b.nameAccent || "")}</span>`;
+  $("#nav-logo").innerHTML = brandLogoHTML(b);
   const links = (C.nav || []).map(n => `<a href="${esc(n.href)}">${esc(n.label)}</a>`).join("");
   const cta = C.navCta ? `<a href="${esc(C.navCta.href)}" class="btn btn-primary nav-cta">${esc(C.navCta.label)}</a>` : "";
   $("#nav-links").innerHTML = links + cta;
@@ -161,7 +173,7 @@ function buildFooter() {
     <div><h5>${esc(col.title)}</h5>
       <ul>${(col.links || []).map(l => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join("")}</ul>
     </div>`).join("");
-  $("#footer-copy").textContent = `© ${b.year || new Date().getFullYear()} ${b.name || ""}${b.nameAccent || ""}. All rights reserved.`;
+  $("#footer-copy").textContent = `© ${b.year || new Date().getFullYear()} ${b.name || ""}${b.nameAccent || ""}. Все права защищены.`;
 }
 
 /* =============================================================================

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Meridian Build — design-led construction studio. Private residences and developments, from first sketch to keys." />
+  <meta name="description" content="Промтех Групп — инжиниринг и проектирование любой сложности. По всей России." />
   <meta name="theme-color" content="#05080F" />
   <title>Meridian Build — Architecture &amp; Construction</title>
 
@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=4" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=10" />
   <!-- keep hero hidden until intro plays, but only when JS is available -->
   <script>document.documentElement.classList.add("preload");</script>
 </head>
@@ -21,10 +21,16 @@
   <!-- ================= NAV ================= -->
   <header class="nav" id="nav">
     <a class="nav-logo" id="nav-logo" href="#home" aria-label="Home"></a>
-    <nav class="nav-links" id="nav-links" aria-label="Primary"></nav>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-    </button>
+    <div class="nav-right">
+      <nav class="nav-links" id="nav-links" aria-label="Primary"></nav>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"/></svg>
+      </button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
   </header>
 
   <!-- ================= HERO ================= -->
@@ -118,9 +124,10 @@
 
   <!-- ================= SCRIPTS ================= -->
   <!-- 1) config + theme load first (plain scripts, set globals) -->
-  <script src="assets/js/config.js?v=3"></script>
-  <script src="assets/js/theme.js?v=3"></script>
+  <script src="assets/js/config.js?v=6"></script>
+  <script src="assets/js/theme.js?v=4"></script>
   <script src="assets/js/placeholder.js"></script>
+  <script src="assets/js/cursor.js?v=1"></script>
   <!-- 2) Three.js module resolution for the 3D hero scene -->
   <script type="importmap">
   {
@@ -131,7 +138,7 @@
   }
   </script>
   <!-- 3) page logic + 3D scene (ES modules, deferred automatically) -->
-  <script type="module" src="assets/js/main.js"></script>
-  <script type="module" src="assets/js/scene.js?v=7"></script>
+  <script type="module" src="assets/js/main.js?v=2"></script>
+  <script type="module" src="assets/js/scene.js?v=8"></script>
 </body>
 </html>
