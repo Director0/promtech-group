@@ -62,7 +62,7 @@ function boot() {
   /* ---------- the liquid-glass cube ---------- */
   const baseY = 2.6;
   const cubeGroup = new THREE.Group();
-  cubeGroup.position.set(5.0, baseY, 0);
+  cubeGroup.position.set(10.0, baseY, 0);
   scene.add(cubeGroup);
 
   const SIZE = 4.0;
