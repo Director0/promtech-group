@@ -56,10 +56,10 @@ window.SITE_CONFIG = {
      3) NAVIGATION (anchors on the home page)
      ------------------------------------------------------------------------ */
   nav: [
-    { label: "Home",      href: "#home" },
-    { label: "About",     href: "#about" },
-    { label: "Projects",  href: "#portfolio" },
-    { label: "Contact",   href: "#contact" }
+    { label: "Главная",      href: "#home" },
+    { label: "О компании",     href: "#about" },
+    { label: "Проекты",  href: "#portfolio" },
+    { label: "Связаться",   href: "#contact" }
   ],
   navCta: { label: "Start a project", href: "#contact" },
 
@@ -67,18 +67,18 @@ window.SITE_CONFIG = {
      4) HERO — first screen. Quick summary of the company sits over the 3D scene.
      ------------------------------------------------------------------------ */
   hero: {
-    eyebrow: "Est. 2009 · 140+ homes delivered",
-    titleLines: ["We build", "homes that", "hold the light."],
+    eyebrow: "Осн. 2014 · 100+ успешных проектов",
+    titleLines: ["Мы создаем", "будущее, которое", "вдохновляет."],
     summary:
       "Meridian Build is a design-led construction studio crafting private residences " +
       "and developments from first sketch to handover of the keys. Precision engineering, " +
       "honest materials, and a finish you can feel in the dark.",
-    primaryCta:   { label: "View our work", href: "#portfolio" },
-    secondaryCta: { label: "Talk to us",    href: "#contact" },
+    primaryCta:   { label: "Наши проекты", href: "#portfolio" },
+    secondaryCta: { label: "Написать нам",    href: "#contact" },
     stats: [
-      { value: 17,  suffix: "+",  label: "Years building" },
-      { value: 142, suffix: "",   label: "Homes delivered" },
-      { value: 38,  suffix: "",   label: "Active sites" },
+      { value: 12,  suffix: "+",  label: "Лет в работе" },
+      { value: 142, suffix: "",   label: "Объекта в эксплуатации" },
+      { value: 38,  suffix: "+",   label: "Городов" },
       { value: 100, suffix: "%",  label: "On-time handover" }
     ]
   },
@@ -103,15 +103,15 @@ window.SITE_CONFIG = {
      6) ABOUT
      ------------------------------------------------------------------------ */
   about: {
-    eyebrow: "About the company",
-    title: "Quiet craftsmanship, built to outlast trends.",
+    eyebrow: "О компании",
+    title: "Сдержанное мастерство, вне времени.",
     paragraphs: [
-      "Founded in 2009, Meridian Build began as a two-person joinery workshop and grew " +
-      "into a full-service construction studio. We keep design, engineering and the build " +
-      "team under one roof, so the drawing you fall in love with is the house you move into.",
-      "We work on a deliberately small number of projects each year. That discipline lets " +
-      "our site managers stay hands-on, our timelines stay honest, and our clients always " +
-      "know who is standing on their site today."
+      "Основанная в 2014 году, наша компания начала свой путь с небольших архитектурных " +
+      "и инженерных проектов, объединяя опыт специалистов, для которых качество и внимание к деталям " +
+      "всегда были главным приоритетом. За годы работы мы сформировали команду профессионалов, способную решать задачи различной сложности — от частных объектов до крупных коммерческих и общественных зданий.",
+      "" +
+      "Мы убеждены, что качественный проект — это основа успешного строительства, " +
+      "поэтому сопровождаем каждый объект с максимальной ответственностью на всех этапах его реализации."
     ],
     values: [
       { title: "Design-led", text: "Architects and builders in the same room from day one." },
@@ -119,7 +119,7 @@ window.SITE_CONFIG = {
       { title: "Honest materials", text: "Stone, timber and steel chosen to age gracefully." },
       { title: "Single point of contact", text: "One project lead, start to keys." }
     ],
-    image: "https://picsum.photos/seed/meridian-about/1200/1500"
+    image: "./assets/models/hq.png"
   },
 
   /* ---------------------------------------------------------------------------
@@ -143,8 +143,8 @@ window.SITE_CONFIG = {
           services  list of what we did
      ------------------------------------------------------------------------ */
   portfolio: {
-    eyebrow: "Selected work",
-    title: "Projects",
+    eyebrow: "Портфолио",
+    title: "Проекты",
     subtitle: "A few of the homes and developments we've delivered. Tap any project for the full story.",
     filtersEnabled: true
   },
