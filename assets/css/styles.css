@@ -369,6 +369,62 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 .card-status { position: absolute; top: 20px; left: 20px; z-index: 3; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 11px; border-radius: 100px; background: color-mix(in srgb, var(--bg) 65%, transparent); border: 1px solid var(--line); color: var(--gold-soft); }
 
 /* =============================================================================
+   NEWS
+   ========================================================================== */
+.news-head { margin-bottom: 44px; max-width: 60ch; }
+.news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+@media (max-width: 900px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .news-grid { grid-template-columns: 1fr; } }
+
+.news-card {
+  display: flex; flex-direction: column; text-align: left;
+  background: transparent; border: 1px solid var(--line); border-radius: 4px;
+  overflow: hidden; padding: 0 0 22px; font: inherit; color: inherit; cursor: pointer;
+  transition: transform .5s var(--ease), border-color .4s var(--ease), box-shadow .5s var(--ease);
+}
+.news-card:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--gold) 55%, transparent); box-shadow: 0 26px 54px -32px rgba(0,0,0,0.85); }
+html[data-theme="light"] .news-card:hover { box-shadow: 0 24px 50px -30px rgba(13,33,80,0.30); }
+.news-card-media { display: block; aspect-ratio: 16 / 10; overflow: hidden; }
+.news-card-media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.95) brightness(0.92); transition: transform .7s var(--ease), filter .4s var(--ease); }
+.news-card:hover .news-card-media img { transform: scale(1.06); filter: saturate(1.05) brightness(1); }
+.news-card-date { display: block; margin: 20px 24px 8px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+.news-card-title { margin: 0 24px; font-size: 1.3rem; line-height: 1.2; }
+.news-card-cta { display: inline-flex; align-items: center; gap: 8px; margin: 16px 24px 0; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); transition: gap .25s var(--ease), color .25s var(--ease); }
+.news-card-cta svg { width: 15px; height: 15px; }
+.news-card:hover .news-card-cta { color: var(--gold); gap: 12px; }
+.news-card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ---- news modal (blurs the page behind) ---- */
+.news-modal {
+  position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 5vw;
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(10px) saturate(120%); -webkit-backdrop-filter: blur(10px) saturate(120%);
+  opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+}
+.news-modal.open { opacity: 1; pointer-events: auto; }
+.news-modal-panel {
+  position: relative; width: min(680px, 100%); max-height: 88vh; overflow: auto;
+  background: var(--bg-elevated); border: 1px solid var(--line); border-radius: 6px;
+  box-shadow: 0 40px 90px -40px rgba(0,0,0,0.8);
+  transform: translateY(16px) scale(0.98); transition: transform .35s var(--ease);
+}
+.news-modal.open .news-modal-panel { transform: none; }
+.news-modal-media { aspect-ratio: 16 / 9; overflow: hidden; }
+.news-modal-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.news-modal-body { padding: clamp(22px, 4vw, 40px); }
+.news-modal-date { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin: 0 0 12px; }
+.news-modal-title { font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; margin: 0 0 18px; }
+.news-modal-text p { color: var(--muted); margin: 0 0 16px; line-height: 1.75; }
+.news-modal-close {
+  position: absolute; top: 14px; right: 14px; z-index: 2;
+  width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--bg) 55%, transparent); border: 1px solid var(--line);
+  color: var(--text); backdrop-filter: blur(6px); transition: background-color .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+}
+.news-modal-close:hover { background: var(--gold); color: var(--on-accent); border-color: var(--gold); }
+.news-modal-close svg { width: 22px; height: 22px; }
+
+/* =============================================================================
    CONTACT
    ========================================================================== */
 .contact-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(36px, 6vw, 80px); }
@@ -381,7 +437,7 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 .contact-list .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); }
 .contact-list .val { color: var(--text); }
 
-.form { display: grid; gap: 18px; background: var(--bg-elevated); border: 1px solid var(--line); padding: clamp(24px, 4vw, 40px); border-radius: 4px; }
+.form { display: grid; gap: 18px; background: transparent; border: 1px solid var(--line); padding: clamp(24px, 4vw, 40px); border-radius: 4px; }
 .field { display: grid; gap: 8px; }
 .field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); }
 .field input, .field textarea {

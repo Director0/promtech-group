@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Промтех Групп — инжиниринг и проектирование любой сложности. По всей России." />
+  <meta name="description" content="Промтех Групп. Инжиниринг и проектирование любой сложности. По всей России." />
   <meta name="theme-color" content="#05080F" />
-  <title>Meridian Build — Architecture &amp; Construction</title>
+  <title>Промтех Групп</title>
 
   <!-- Fonts: Cinzel (display) + Josefin Sans (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=10" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=12" />
   <!-- keep hero hidden until intro plays, but only when JS is available -->
   <script>document.documentElement.classList.add("preload");</script>
 </head>
@@ -77,6 +77,33 @@
     </div>
   </section>
 
+  <!-- ================= NEWS ================= -->
+  <section class="section" id="news">
+    <div class="container">
+      <div class="news-head">
+        <p class="eyebrow" id="news-eyebrow" data-reveal></p>
+        <h2 class="section-title" id="news-title" data-reveal data-reveal-delay="1"></h2>
+        <p class="lead" id="news-subtitle" data-reveal data-reveal-delay="2" style="margin-top:14px"></p>
+      </div>
+      <div class="news-grid" id="news-grid"></div>
+    </div>
+  </section>
+
+  <!-- News modal (opens over a blurred page) -->
+  <div class="news-modal" id="news-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="news-modal-title">
+    <div class="news-modal-panel" role="document">
+      <button class="news-modal-close" id="news-modal-close" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="news-modal-media"><img id="news-modal-img" alt="" /></div>
+      <div class="news-modal-body">
+        <p class="news-modal-date" id="news-modal-date"></p>
+        <h3 class="news-modal-title" id="news-modal-title"></h3>
+        <div class="news-modal-text" id="news-modal-text"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= CONTACT ================= -->
   <section class="section" id="contact">
     <div class="container contact-grid">
@@ -88,7 +115,7 @@
       </div>
       <form class="form" id="contact-form" data-reveal data-reveal-delay="2">
         <div class="field">
-          <label for="f-name">Name</label>
+          <label for="f-name">Ваше имя</label>
           <input id="f-name" name="name" type="text" autocomplete="name" required />
         </div>
         <div class="field">
@@ -96,11 +123,11 @@
           <input id="f-email" name="email" type="email" autocomplete="email" required />
         </div>
         <div class="field">
-          <label for="f-msg">About your project</label>
+          <label for="f-msg">О проекте</label>
           <textarea id="f-msg" name="message" required placeholder="Site location, type of build, rough timeline…"></textarea>
         </div>
-        <button class="btn btn-primary" type="submit" style="justify-content:center">Send enquiry</button>
-        <p class="form-note">We reply to every enquiry within two working days.</p>
+        <button class="btn btn-primary" type="submit" style="justify-content:center">Отправить</button>
+        <p class="form-note">Ответим на любые предложения в течение двух рабочих дней.</p>
       </form>
     </div>
   </section>
@@ -117,14 +144,14 @@
       </div>
       <div class="footer-bottom">
         <span id="footer-copy"></span>
-        <span>Built with care · Procedural 3D, no heavy assets</span>
+        <span>Разработано: Stolpovsky corp. · Forward To Invent.</span>
       </div>
     </div>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
   <!-- 1) config + theme load first (plain scripts, set globals) -->
-  <script src="assets/js/config.js?v=6"></script>
+  <script src="assets/js/config.js?v=7"></script>
   <script src="assets/js/theme.js?v=4"></script>
   <script src="assets/js/placeholder.js"></script>
   <script src="assets/js/cursor.js?v=1"></script>
@@ -138,7 +165,7 @@
   }
   </script>
   <!-- 3) page logic + 3D scene (ES modules, deferred automatically) -->
-  <script type="module" src="assets/js/main.js?v=2"></script>
+  <script type="module" src="assets/js/main.js?v=3"></script>
   <script type="module" src="assets/js/scene.js?v=8"></script>
 </body>
 </html>
