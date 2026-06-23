@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   buildHero();
   buildAbout();
   buildPortfolio();
+  buildNews();
   buildContact();
   buildFooter();
 
@@ -27,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initReveal();
   initHeroIntro();
   initScrollSpy();
+  initNewsModal();
 });
 
 /* logo markup: image (with optional light variant) if a source is set, else text */
@@ -132,6 +134,75 @@ function buildPortfolio() {
   });
 }
 
+/* ---------- NEWS ---------- */
+function fmtDate(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return iso || "";
+  try { return new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric" }).format(d); }
+  catch (e) { return iso; }
+}
+
+function buildNews() {
+  const n = C.news || {};
+  const items = n.items || [];
+  const sec = document.getElementById("news");
+  if (!sec) return;
+  if (!items.length) { sec.style.display = "none"; return; }
+
+  $("#news-eyebrow").textContent = n.eyebrow || "";
+  $("#news-title").textContent = n.title || "News";
+  $("#news-subtitle").textContent = n.subtitle || "";
+
+  $("#news-grid").innerHTML = items.map((it, i) => `
+    <button class="news-card" data-news-id="${esc(it.id)}" data-reveal data-reveal-delay="${(i % 3) + 1}"
+            aria-label="${esc(it.title)} — открыть">
+      <span class="news-card-media">
+        <img src="${esc(it.thumb || "")}" alt="${esc(it.title)}" loading="lazy" decoding="async"
+             data-ph="${esc(it.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
+      </span>
+      <time class="news-card-date">${esc(fmtDate(it.date))}</time>
+      <h3 class="news-card-title">${esc(it.title)}</h3>
+      <span class="news-card-cta">Читать ${ICON.arrow}</span>
+    </button>`).join("");
+}
+
+function initNewsModal() {
+  const items = (C.news && C.news.items) || [];
+  const byId = {};
+  items.forEach(it => byId[it.id] = it);
+  const modal = $("#news-modal");
+  if (!modal) return;
+  const img = $("#news-modal-img"), dateEl = $("#news-modal-date"),
+        titleEl = $("#news-modal-title"), textEl = $("#news-modal-text");
+
+  function open(it) {
+    img.dataset.ph = it.title;
+    img.onerror = () => window.PH && PH.set(img, it.title);
+    img.src = it.thumb || "";
+    img.alt = it.title || "";
+    dateEl.textContent = fmtDate(it.date);
+    titleEl.textContent = it.title || "";
+    const body = Array.isArray(it.body) ? it.body : [it.body || ""];
+    textEl.innerHTML = body.map(p => `<p>${esc(p)}</p>`).join("");
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+  function close() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  $("#news-grid")?.addEventListener("click", (e) => {
+    const card = e.target.closest(".news-card");
+    if (card && byId[card.dataset.newsId]) open(byId[card.dataset.newsId]);
+  });
+  $("#news-modal-close").addEventListener("click", close);
+  modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) close(); });
+}
+
 /* ---------- CONTACT ---------- */
 function buildContact() {
   const c = C.contact || {};
@@ -140,8 +211,8 @@ function buildContact() {
   $("#contact-text").textContent = c.text || "";
   const rows = [
     c.email && { ic: ICON.mail, lbl: "Email", val: c.email, href: `mailto:${c.email}` },
-    c.phone && { ic: ICON.phone, lbl: "Phone", val: c.phone, href: `tel:${c.phone.replace(/\s+/g, "")}` },
-    c.address && { ic: ICON.pin, lbl: "Studio", val: c.address }
+    c.phone && { ic: ICON.phone, lbl: "Телефон", val: c.phone, href: `tel:${c.phone.replace(/\s+/g, "")}` },
+    c.address && { ic: ICON.pin, lbl: "Адрес", val: c.address }
   ].filter(Boolean);
   $("#contact-list").innerHTML = rows.map(r => `
     <li>
@@ -156,10 +227,10 @@ function buildContact() {
     if (!c.formAction) {
       e.preventDefault();
       const btn = form.querySelector("button[type=submit]");
-      btn.textContent = "Thank you — we'll be in touch";
+      btn.textContent = "Спасибо за обращение!";
       btn.disabled = true;
       form.reset();
-      setTimeout(() => { btn.textContent = "Send enquiry"; btn.disabled = false; }, 3500);
+      setTimeout(() => { btn.textContent = "Отправить"; btn.disabled = false; }, 3500);
     }
   });
 }

@@ -168,9 +168,9 @@ function renderNotFound() {
   $("#project-body").innerHTML = `
     <div class="project-main" style="grid-column:1/-1;text-align:center;padding:18vh 0">
       <p class="eyebrow" style="justify-content:center">404</p>
-      <h1 class="section-title">Project not found</h1>
-      <p class="lead" style="margin:18px auto 30px">That project doesn't exist or may have moved.</p>
-      <a class="btn btn-primary" href="index.html#portfolio">${BACK} Back to projects</a>
+      <h1 class="section-title">Проект не найден</h1>
+      <p class="lead" style="margin:18px auto 30px">Такого проекта нет, время создавать.</p>
+      <a class="btn btn-primary" href="index.html#portfolio">${BACK} Назад к проектам</a>
     </div>`;
 }
 
