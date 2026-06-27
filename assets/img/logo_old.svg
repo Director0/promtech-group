@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 40" role="img" aria-label="Promtech Group">
+  <!-- cube mark -->
+  <g fill="none" stroke="#D4A95C" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round">
+    <polygon points="18,5 31,12.5 31,27.5 18,35 5,27.5 5,12.5"/>
+    <path d="M18,5 V20 M31,27.5 L18,20 M5,27.5 L18,20"/>
+  </g>
+  <!-- wordmark -->
+  <text x="44" y="26" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="1.5" fill="#EDF2FA">PROMTECH<tspan fill="#D4A95C" dx="6">GROUP</tspan></text>
+</svg>

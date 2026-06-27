@@ -383,12 +383,12 @@ window.SITE_CONFIG = {
       ]
     },
     {
-      id: "elm-terrace",
-      title: "Elm Terrace",
-      category: "Renovation",
+      id: "bof-dolgie",
+      title: "Жилой комплекс «Долгие Горы»",
+      category: "Жилые здания",
       year: "2025",
-      location: "Hampstead, London",
-      status: "In progress",
+      location: "г. Оренбург, Россия",
+      status: "Строится",
       summary: "A Victorian terrace stripped back, rebuilt and quietly extended.",
       thumb: "https://picsum.photos/seed/elm/900/1100",
       heroType: "image",
