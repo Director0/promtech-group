@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" class="preload">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Project — Meridian Build" />
+  <meta name="description" content="Лицензии и допуски — Промтех Групп." />
   <meta name="theme-color" content="#05080F" />
-  <title>Project — Meridian Build</title>
+  <title>Лицензии — Промтех Групп</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,16 +29,29 @@
     </div>
   </header>
 
-  <!-- FULL-WIDTH HERO (image or video) -->
-  <section class="project-hero" id="project-hero"></section>
+  <main>
+    <!-- HEADER: copy (left) + minimalist 3D building (right) -->
+    <section class="section page-top">
+      <div class="container page-head">
+        <div class="page-head-copy">
+          <p class="eyebrow" id="page-eyebrow" data-reveal></p>
+          <h1 id="page-title" data-reveal data-reveal-delay="1"></h1>
+          <p class="lead" id="page-desc" data-reveal data-reveal-delay="2"></p>
+        </div>
+        <div class="page-visual building" data-reveal data-reveal-delay="1">
+          <canvas id="building-canvas" aria-hidden="true"></canvas>
+        </div>
+      </div>
+    </section>
 
-  <!-- BODY -->
-  <main class="section">
-    <div class="container project-body" id="project-body"></div>
+    <!-- DOCUMENT VIEWER -->
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <p class="eyebrow" id="docs-eyebrow" data-reveal></p>
+        <div class="docviewer" id="docviewer" data-reveal data-reveal-delay="1"></div>
+      </div>
+    </section>
   </main>
-
-  <!-- NEXT PROJECT -->
-  <section class="next-project" id="next-project"></section>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -52,7 +65,7 @@
       </div>
       <div class="footer-bottom">
         <span id="footer-copy"></span>
-        <span><a href="index.html#portfolio">All projects →</a></span>
+        <span><a href="index.html">На главную →</a></span>
       </div>
     </div>
   </footer>
@@ -62,7 +75,7 @@
     <button class="lightbox-close" id="lightbox-close" aria-label="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </button>
-    <img id="lightbox-img" alt="Enlarged project image" />
+    <img id="lightbox-img" alt="Документ" />
   </div>
 
   <!-- SCRIPTS -->
@@ -70,6 +83,17 @@
   <script src="assets/js/theme.js?v=5"></script>
   <script src="assets/js/placeholder.js"></script>
   <script src="assets/js/cursor.js?v=1"></script>
-  <script type="module" src="assets/js/project.js?v=3"></script>
+  <script src="assets/js/pagekit.js?v=1"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script>document.documentElement.classList.remove("preload");</script>
+  <script type="module" src="assets/js/licenses.js?v=1"></script>
+  <script type="module" src="assets/js/scene-building.js?v=1"></script>
 </body>
 </html>
