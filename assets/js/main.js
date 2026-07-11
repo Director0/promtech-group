@@ -76,13 +76,15 @@ function buildAbout() {
   const a = C.about || {};
   $("#about-eyebrow").textContent = a.eyebrow || "";
   $("#about-title").textContent = a.title || "";
+  // Buttons identical to the hero: gold "primary" (with arrow) + "ghost" (no arrow)
   $("#about-copy").innerHTML =
     (a.paragraphs || []).map(p => `<p data-reveal>${esc(p)}</p>`).join("") +
-    `<div class="about-values">` +
-    (a.values || []).map((v, i) => `
-      <div class="value" data-reveal data-reveal-delay="${(i % 4) + 1}">
-        <h4>${esc(v.title)}</h4><p>${esc(v.text)}</p>
-      </div>`).join("") + `</div>`;
+    `<div class="about-actions" data-reveal data-reveal-delay="1">` +
+    (a.links || []).map(l => {
+      const ghost = l.style === "ghost";
+      const cls = ghost ? "btn btn-ghost" : "btn btn-primary";
+      return `<a class="${cls}" href="${esc(l.href)}">${esc(l.label)}${ghost ? "" : " " + ICON.arrow}</a>`;
+    }).join("") + `</div>`;
   const aboutImg = $("#about-image");
   aboutImg.dataset.ph = "Meridian Build — Studio";
   aboutImg.onerror = () => window.PH && PH.set(aboutImg, aboutImg.dataset.ph);

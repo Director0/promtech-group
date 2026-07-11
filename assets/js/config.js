@@ -137,13 +137,78 @@ window.SITE_CONFIG = {
       "Мы убеждены, что качественный проект — это основа успешного строительства, " +
       "поэтому сопровождаем каждый объект с максимальной ответственностью на всех этапах его реализации."
     ],
-    values: [
-      { title: "Деятельность 1", text: "текст..." },
-      { title: "Деятельность 2", text: "текст..." },
-      { title: "Деятельность 3", text: "текст..." },
-      { title: "Деятельность 4", text: "текст..." }
+    // Two call-to-action buttons shown under the About copy (replaces the old
+    // "деятельность" grid). Identical to the two hero buttons:
+    //   style: "primary" -> filled gold button (with arrow)
+    //   style: "ghost"   -> outline button (no arrow)
+    links: [
+      { label: "Лицензии",     href: "licenses.html", style: "primary" },
+      { label: "Деятельность", href: "specs.html",    style: "ghost" }
     ],
     image: "./assets/models/hq.png"
+  },
+
+  /* ---------------------------------------------------------------------------
+     6b) LICENSES PAGE  (licenses.html)
+         - headline + description on the left, minimalist 3D building on the right
+         - a document viewer: big preview (left) + selectable list (right)
+         Put the licence images in  assets/licenses/  (PNG / JPEG supported).
+     ------------------------------------------------------------------------ */
+  licenses: {
+    eyebrow: "Разрешительная документация",
+    title: "Лицензии и допуски",
+    description:
+      "Все виды работ выполняются на основании действующих лицензий, свидетельств " +
+      "и допусков саморегулируемых организаций. Ниже — актуальный пакет разрешительных " +
+      "документов компании.",
+    docsTitle: "Документы",
+    // Each document is a single image (scan / photo). Add as many as you need.
+    documents: [
+      { title: "Свидетельство СРО (проектирование)", src: "assets/licenses/sro-project.jpg" },
+      { title: "Свидетельство СРО (строительство)",   src: "assets/licenses/sro-build.jpg" },
+      { title: "Лицензия МЧС",                          src: "assets/licenses/mchs.jpg" },
+      { title: "Допуск к особо опасным объектам",       src: "assets/licenses/hazard.jpg" }
+    ]
+  },
+
+  /* ---------------------------------------------------------------------------
+     6c) SPECS / ACHIEVEMENTS PAGE  (specs.html)
+         - headline + description on the left, animated checklist on the right
+         - company specifications list
+         - an achievements viewer: big preview (left) + selectable list (right)
+         Put the achievement images in  assets/achievements/  (PNG / JPEG).
+     ------------------------------------------------------------------------ */
+  specs: {
+    eyebrow: "Деятельность компании",
+    title: "Показатели и достижения",
+    description:
+      "Полный цикл работ — от инженерных изысканий и проектирования до строительства " +
+      "и сдачи объекта в эксплуатацию. Мы отвечаем за каждый этап и подтверждаем качество " +
+      "результатами и наградами.",
+    // Short phrases animated as a check-list on the right of the header.
+    checklist: [
+      "Инженерные изыскания",
+      "Проектирование",
+      "Строительство",
+      "Сдача под ключ"
+    ],
+    specsTitle: "Ключевые показатели",
+    // Company specifications — label / value rows.
+    items: [
+      { label: "Год основания",              value: "2014" },
+      { label: "Объектов в эксплуатации",    value: "142" },
+      { label: "Городов присутствия",        value: "38+" },
+      { label: "Специалистов в штате",       value: "60+" },
+      { label: "Сфера деятельности",         value: "Проектирование и строительство" },
+      { label: "География работ",            value: "По всей России" }
+    ],
+    achievementsTitle: "Награды и достижения",
+    // Each achievement is a single image (diploma / certificate / award).
+    achievements: [
+      { title: "Диплом за качество строительства", src: "assets/achievements/quality.jpg" },
+      { title: "Благодарственное письмо",           src: "assets/achievements/thanks.jpg" },
+      { title: "Сертификат ISO 9001",               src: "assets/achievements/iso-9001.jpg" }
+    ]
   },
 
   /* ---------------------------------------------------------------------------

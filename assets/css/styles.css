@@ -36,7 +36,7 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
   opacity: 0;
 }
 .cursor {
-  width: 30px; height: 30px;
+  width: 24px; height: 24px;
   border: 1px solid color-mix(in srgb, var(--text) 45%, transparent);
   background: color-mix(in srgb, var(--text) 7%, transparent);
   backdrop-filter: blur(3px) saturate(150%);
@@ -56,7 +56,7 @@ html.has-cursor .cursor.ready, html.has-cursor .cursor-dot.ready { opacity: 1; }
 
 /* over interactive elements: the ring grows + tints with the accent */
 .cursor.is-hover {
-  width: 56px; height: 56px;
+  width: 42px; height: 42px;
   background: color-mix(in srgb, var(--gold) 16%, transparent);
   border-color: color-mix(in srgb, var(--gold) 60%, transparent);
 }
@@ -522,6 +522,107 @@ html[data-theme="light"] .news-card:hover { box-shadow: 0 24px 50px -30px rgba(1
 .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 4px; }
 .lightbox-close { position: absolute; top: 24px; right: 28px; background: none; border: 0; color: var(--text); width: 44px; height: 44px; }
 .lightbox-close svg { width: 30px; height: 30px; }
+
+/* =============================================================================
+   ABOUT ACTION BUTTONS  (home — replaces the old "деятельность" grid)
+   ========================================================================== */
+/* same layout as .hero-actions so the buttons match the hero exactly */
+.about-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 36px; }
+
+/* =============================================================================
+   INNER PAGE HEADER  (licenses.html / specs.html)
+   two-column: copy on the left, a visual (3D building / checklist) on the right
+   ========================================================================== */
+.page-top { padding-top: calc(var(--nav-h) + clamp(48px, 9vh, 110px)); }
+.page-head {
+  display: grid; grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(30px, 6vw, 80px); align-items: center;
+}
+.page-head .lead { margin-top: 20px; }
+.page-head-copy h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); max-width: 14ch; }
+.page-visual { position: relative; min-height: 340px; height: 100%; }
+@media (max-width: 860px) {
+  .page-head { grid-template-columns: 1fr; }
+  .page-visual { min-height: 300px; order: -1; }
+}
+
+/* minimalist 3D building canvas (licenses page) */
+#building-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.page-visual.building { min-height: clamp(340px, 46vh, 520px); }
+
+/* =============================================================================
+   ANIMATED CHECKLIST  (specs page — "task list" motion)
+   ========================================================================== */
+.checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.checklist li {
+  position: relative; display: flex; align-items: center; gap: 18px;
+  padding: 16px 0 16px 4px; opacity: 0; transform: translateX(14px);
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.checklist li.show { opacity: 1; transform: none; }
+.checklist .mark {
+  flex: none; width: 34px; height: 34px; position: relative; z-index: 1;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: var(--bg); transition: border-color .4s var(--ease), background-color .4s var(--ease);
+}
+.checklist li.done .mark { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, transparent); }
+.checklist .mark svg { width: 18px; height: 18px; }
+.checklist .mark svg path {
+  stroke: var(--gold); stroke-width: 2.2; fill: none;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 28; stroke-dashoffset: 28;
+  transition: stroke-dashoffset .45s var(--ease);
+}
+.checklist li.done .mark svg path { stroke-dashoffset: 0; }
+/* the connector line that "grows" from one mark to the next */
+.checklist li:not(:last-child) .mark::after {
+  content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  width: 1px; height: 24px; background: var(--line);
+  transform-origin: top; scale: 1 0; transition: scale .45s var(--ease) .15s;
+}
+.checklist li.done:not(:last-child) .mark::after { scale: 1 1; background: var(--gold); }
+.checklist .ck-label { font-size: clamp(1rem, 1.5vw, 1.15rem); color: var(--muted); transition: color .4s var(--ease); }
+.checklist li.done .ck-label { color: var(--text); }
+
+/* =============================================================================
+   COMPANY SPECS LIST  (specs page)
+   ========================================================================== */
+.specs-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 8px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.specs-list .row { background: var(--bg); padding: 22px 24px; }
+.specs-list .row .k { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; }
+.specs-list .row .v { font-family: var(--font-display); font-size: clamp(1.2rem, 2.4vw, 1.7rem); color: var(--text); margin-top: 8px; line-height: 1.15; }
+@media (max-width: 620px) { .specs-list { grid-template-columns: 1fr; } }
+
+/* =============================================================================
+   DOCUMENT VIEWER  (licenses + achievements)
+   big preview on the left, selectable list on the right
+   ========================================================================== */
+.docviewer { display: grid; grid-template-columns: 1.7fr 1fr; gap: clamp(24px, 4vw, 48px); align-items: start; }
+.doc-preview {
+  border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+  background: var(--bg-elevated); position: sticky; top: calc(var(--nav-h) + 24px);
+}
+.doc-preview-frame { position: relative; aspect-ratio: 4 / 3; background: var(--bg-elevated); }
+.doc-preview-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
+.doc-caption { padding: 16px 20px; border-top: 1px solid var(--line); font-size: 14px; color: var(--text); letter-spacing: 0.02em; }
+.doc-list { display: flex; flex-direction: column; gap: 8px; }
+.doc-item {
+  display: flex; align-items: center; gap: 14px; text-align: left;
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 4px;
+  background: transparent; color: var(--muted); width: 100%;
+  transition: border-color .25s var(--ease), color .25s var(--ease), background-color .25s var(--ease);
+}
+.doc-item:hover { border-color: var(--gold); color: var(--text); }
+.doc-item.active { border-color: var(--gold); color: var(--text); background: color-mix(in srgb, var(--gold) 8%, transparent); }
+.doc-thumb { flex: none; width: 46px; height: 46px; border-radius: 3px; overflow: hidden; background: var(--bg-elevated); border: 1px solid var(--line); }
+.doc-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.doc-name { font-size: 14px; line-height: 1.35; }
+.doc-num { flex: none; margin-left: auto; font-size: 12px; letter-spacing: 0.1em; color: var(--muted); }
+@media (max-width: 860px) {
+  .docviewer { grid-template-columns: 1fr; }
+  .doc-preview { position: static; }
+}
 
 /* =============================================================================
    SCROLL REVEAL ANIMATIONS  (transform + opacity only; GPU friendly)

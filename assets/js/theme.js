@@ -35,8 +35,9 @@
     root.setAttribute("data-theme", mode);
     try { localStorage.setItem(KEY, mode); } catch (e) {}
 
-    // keep the 3D hero scene in sync (fog / stars react to the background)
+    // keep the 3D scenes in sync (fog / stars / building lines react to the theme)
     if (window.__SCENE && window.__SCENE.applyTheme) window.__SCENE.applyTheme(c);
+    if (window.__BUILDING && window.__BUILDING.applyTheme) window.__BUILDING.applyTheme();
   }
 
   var saved;
