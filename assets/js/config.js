@@ -161,6 +161,27 @@ window.SITE_CONFIG = {
       "Все виды работ выполняются на основании действующих лицензий, свидетельств " +
       "и допусков саморегулируемых организаций. Ниже — актуальный пакет разрешительных " +
       "документов компании.",
+    // Block between the header and the documents: description (left) + photo
+    // gallery (right, reuses the project gallery). Gallery images can be any
+    // PNG / JPEG; drop them in  assets/licenses/programs/  (missing files fall
+    // back to a branded placeholder).
+    programs: {
+      eyebrow: "Программное обеспечение",
+      title: "Лицензионные программы",
+      paragraphs: [
+        "Проектирование и расчёты выполняются исключительно в лицензионном " +
+        "программном обеспечении. Это гарантирует корректность моделей, соответствие " +
+        "нормативам и юридическую чистоту передаваемой документации.",
+        "В работе мы используем актуальные версии профессиональных САПР и BIM-систем " +
+        "для архитектурного, конструктивного и инженерного разделов проекта."
+      ],
+      gallery: [
+        "assets/licenses/programs/autocad.jpg",
+        "assets/licenses/programs/revit.jpg",
+        "assets/licenses/programs/lira.jpg",
+        "assets/licenses/programs/nanocad.jpg"
+      ]
+    },
     docsTitle: "Документы",
     // Each document is a single image (scan / photo). Add as many as you need.
     documents: [
@@ -192,6 +213,35 @@ window.SITE_CONFIG = {
       "Строительство",
       "Сдача под ключ"
     ],
+    // Text-only paragraph shown after the header, before the key specs.
+    // May be a single string or an array of paragraphs.
+    overview: [
+      "Наша компания занимается проектированием зданий, которые будут соответствовать нормативно-правовым актам, желаниям заказчика, гармонично впишутся в архитектуру города. «Промтехнология» гарантирует качественное и надёжное сотрудничество." +
+      " Наша организация имеет опыт проектироания уникальных объектов как на территории России, так и в странах СНГ (Казахстан)" +
+      "объединяем инженерный опыт, современные технологии и внимание к деталям, " +
+      "чтобы каждый проект был выполнен качественно и в срок."
+    ],
+
+    // Block after the overview: description (left) + photo library (right,
+    // reuses the project gallery). Images can be any PNG / JPEG; drop them in
+    // assets/specs/ai/ (missing files fall back to a branded placeholder).
+    ai: {
+      eyebrow: "Технологии",
+      title: "Внедрение ИИ в проектирование",
+      paragraphs: [
+        "Мы внедряем инструменты искусственного интеллекта в процесс проектирования: " +
+        "генеративные планировки, автоматизированную проверку решений на соответствие " +
+        "нормативам и ускоренный расчёт вариантов. Это сокращает сроки и повышает точность.",
+        "ИИ помогает нашим инженерам сосредоточиться на творческих и ответственных задачах, " +
+        "оставляя рутинные операции автоматизированным алгоритмам."
+      ],
+      gallery: [
+        "assets/specs/ai/ai-1.jpg",
+        "assets/specs/ai/ai-2.jpg",
+        "assets/specs/ai/ai-3.jpg",
+        "assets/specs/ai/ai-4.jpg"
+      ]
+    },
     specsTitle: "Ключевые показатели",
     // Company specifications — label / value rows.
     items: [
