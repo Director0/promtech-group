@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
   $("#page-desc").textContent = S.description || "";
 
   buildChecklist(S.checklist || []);
+  buildOverview(S.overview);
+  buildAI(S.ai);
   buildSpecs(S);
   buildAchievements(S);
 
@@ -51,6 +53,30 @@ function buildChecklist(items) {
     ents.forEach(en => { if (en.isIntersecting) { run(); io.disconnect(); } });
   }, { threshold: 0.4 });
   io.observe(ul);
+}
+
+/* ---------- text-only overview paragraph ---------- */
+function buildOverview(ov) {
+  const sec = $("#overview");
+  const paras = Array.isArray(ov) ? ov : (ov ? [ov] : []);
+  if (!paras.length) { if (sec) sec.style.display = "none"; return; }
+  $("#overview-text").innerHTML = paras.map(p => `<p>${esc(p)}</p>`).join("");
+}
+
+/* ---------- AI-in-design block: description + photo library ---------- */
+function buildAI(ai) {
+  const sec = $("#ai");
+  if (!ai || !((ai.gallery && ai.gallery.length) || (ai.paragraphs && ai.paragraphs.length))) {
+    if (sec) sec.style.display = "none";
+    return;
+  }
+  $("#ai-eyebrow").textContent = ai.eyebrow || "";
+  $("#ai-title").textContent = ai.title || "";
+  $("#ai-desc").innerHTML = (ai.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join("");
+  $("#ai-gallery").innerHTML = (ai.gallery || []).map(src =>
+    `<img src="${esc(src)}" alt="${esc(ai.title || "")}" loading="lazy" decoding="async" data-zoom
+          data-ph="${esc(ai.title || "AI")}" onerror="window.PH&&PH.set(this,this.dataset.ph)">`
+  ).join("");
 }
 
 /* ---------- company specifications list ---------- */
