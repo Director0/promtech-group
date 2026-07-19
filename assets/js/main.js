@@ -223,16 +223,32 @@ function buildContact() {
       ${r.href ? `<a class="val" href="${esc(r.href)}">${esc(r.val)}</a>` : `<span class="val">${esc(r.val)}</span>`}</span>
     </li>`).join("");
 
+  // Consent to personal-data processing (152-ФЗ): fill the label from config and
+  // keep the submit button disabled until the box is ticked.
+  const cs = (C.legal && C.legal.consent) || {};
+  const consentText = $("#consent-text");
+  if (consentText) {
+    consentText.innerHTML =
+      `${esc(cs.text || "Я даю согласие на обработку персональных данных и принимаю")} ` +
+      `<a href="${esc(cs.href || "privacy.html")}">${esc(cs.linkLabel || "политику конфиденциальности")}</a>.`;
+  }
+  const consent = $("#f-consent");
+  const submit = $("#contact-submit");
+  const syncConsent = () => { if (submit && consent) submit.disabled = !consent.checked; };
+  if (consent) consent.addEventListener("change", syncConsent);
+  syncConsent();
+
   const form = $("#contact-form");
   if (c.formAction) form.setAttribute("action", c.formAction), form.setAttribute("method", "post");
   form.addEventListener("submit", (e) => {
     if (!c.formAction) {
       e.preventDefault();
-      const btn = form.querySelector("button[type=submit]");
+      const btn = submit || form.querySelector("button[type=submit]");
       btn.textContent = "Спасибо за обращение!";
       btn.disabled = true;
       form.reset();
-      setTimeout(() => { btn.textContent = "Отправить"; btn.disabled = false; }, 3500);
+      // reset() clears the consent tick, so re-apply the gate after the thank-you.
+      setTimeout(() => { btn.textContent = "Отправить"; syncConsent(); }, 3500);
     }
   });
 }

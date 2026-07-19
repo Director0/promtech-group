@@ -593,6 +593,43 @@ window.SITE_CONFIG = {
     formAction: "" // leave empty for demo; add your endpoint to receive submissions
   },
 
+  /* ---------------------------------------------------------------------------
+     8b) LEGAL / ПРАВОВАЯ ИНФОРМАЦИЯ (152-ФЗ)
+         Powers the privacy page (privacy.html), the consent checkbox next to the
+         contact form, and the cookie notice. Fill the requisites with the real
+         company data. IMPORTANT: submissions must be stored on a server located
+         in Russia (242-ФЗ), and the operator must be registered with Роскомнадзор.
+     ------------------------------------------------------------------------ */
+  legal: {
+    // Company requisites shown on the privacy page — REPLACE with real values.
+    companyLegalName: "ООО «Промтехнология»",
+    inn:  "0000000000",
+    kpp:  "000000000",
+    ogrn: "0000000000000",
+    // Effective date of the current policy version.
+    policyDate: "16 июля 2026 г.",
+
+    // Consent checkbox rendered next to the contact form. The submit button is
+    // disabled until the box is ticked (enforced in main.js).
+    consent: {
+      text: "Я даю согласие на обработку персональных данных и принимаю",
+      linkLabel: "политику конфиденциальности",
+      href: "privacy.html"
+    },
+
+    // Cookie notice — shown once, choice stored in localStorage. Because the site
+    // will use веб-аналитику (Яндекс.Метрика), informing about cookies is required.
+    cookie: {
+      text: "Мы используем файлы cookie и сервисы веб-аналитики (в т.ч. Яндекс.Метрика), " +
+            "чтобы сайт работал корректно и становился удобнее. Продолжая пользоваться сайтом, " +
+            "вы соглашаетесь с обработкой cookie в соответствии с",
+      linkLabel: "политикой конфиденциальности",
+      href: "privacy.html",
+      accept: "Принять",
+      decline: "Отклонить"
+    }
+  },
+
   footer: {
     blurb: "Design-led construction studio. Private residences and developments, from first sketch to keys.",
     columns: [
