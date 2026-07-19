@@ -587,9 +587,9 @@ window.SITE_CONFIG = {
     eyebrow: "Открыты вашим идеям",
     title: "Начнём обсуждение вашего проекта.",
     text: "Расскажите нам о своем проекте. Будем рады сотрудничеству. Срок обработки заявок: не более 2-ух рабочих дней.",
-    email: "npp-promtech@mail.ru",
-    phone: "+7 922 895 77 11",
-    address: "ул. Терешковой, 103, 460006, Оренбург, Россия",
+    email: "-",
+    phone: "-",
+    address: "-",
     formAction: "" // leave empty for demo; add your endpoint to receive submissions
   },
 
@@ -602,7 +602,7 @@ window.SITE_CONFIG = {
      ------------------------------------------------------------------------ */
   legal: {
     // Company requisites shown on the privacy page — REPLACE with real values.
-    companyLegalName: "ООО «Промтехнология»",
+    companyLegalName: "ООО «-»",
     inn:  "0000000000",
     kpp:  "000000000",
     ogrn: "0000000000000",
