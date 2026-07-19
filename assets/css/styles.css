@@ -665,3 +665,67 @@ html[data-theme="light"] .news-card:hover { box-shadow: 0 24px 50px -30px rgba(1
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
   [data-reveal] { opacity: 1; transform: none; }
 }
+
+/* =============================================================================
+   LEGAL — consent checkbox, cookie notice, privacy prose page (152-ФЗ)
+   ========================================================================== */
+
+/* Consent checkbox under the contact form */
+.field-consent {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; line-height: 1.5; color: var(--muted);
+  cursor: pointer; user-select: none;
+}
+.field-consent input {
+  appearance: none; -webkit-appearance: none;
+  flex: none; width: 18px; height: 18px; margin-top: 1px;
+  border: 1px solid var(--line); border-radius: 4px;
+  background: var(--bg-elevated); cursor: pointer;
+  display: grid; place-items: center; transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.field-consent input:hover { border-color: var(--gold); }
+.field-consent input:checked { background: var(--gold); border-color: var(--gold); }
+.field-consent input:checked::after {
+  content: ""; width: 5px; height: 9px; margin-top: -2px;
+  border: solid var(--on-accent); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.field-consent input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.field-consent a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+.btn[disabled] { opacity: 0.5; pointer-events: none; }
+
+/* Cookie notice (injected by cookie.js) */
+.cookie {
+  position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 9000;
+  max-width: 720px; margin: 0 auto;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 18px 22px; border: 1px solid var(--line); border-radius: 10px;
+  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px -28px rgba(0,0,0,0.85);
+  transform: translateY(140%); opacity: 0; transition: transform .5s var(--ease), opacity .5s var(--ease);
+}
+.cookie.show { transform: translateY(0); opacity: 1; }
+.cookie-text { flex: 1 1 320px; font-size: 13px; line-height: 1.55; color: var(--muted); margin: 0; }
+.cookie-text a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+.cookie-actions { display: flex; gap: 10px; flex: none; }
+.cookie .btn { padding: 9px 18px; font-size: 13px; }
+
+/* Legal prose page (privacy.html) */
+.legal-prose { max-width: 76ch; }
+.legal-prose h2 { font-family: var(--font-display); font-size: clamp(1.3rem, 2.6vw, 1.7rem); margin: 40px 0 14px; }
+.legal-prose h2:first-child { margin-top: 0; }
+.legal-prose p, .legal-prose li { color: var(--muted); line-height: 1.7; font-size: 1rem; }
+.legal-prose p { margin: 0 0 14px; }
+.legal-prose ul { margin: 0 0 14px; padding-left: 22px; display: grid; gap: 8px; }
+.legal-prose li::marker { color: var(--gold); }
+.legal-prose a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+.legal-prose strong { color: var(--text); font-weight: 600; }
+.legal-meta { font-size: 13px; color: var(--muted); margin-bottom: 34px; }
+.legal-requisites { margin-top: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; background: var(--bg-elevated); }
+.legal-requisites dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 22px; margin: 0; }
+.legal-requisites dt { color: var(--muted); font-size: 13px; }
+.legal-requisites dd { margin: 0; color: var(--text); font-size: 14px; }
+
+/* Footer bottom: keep the privacy link inline with the other meta */
+.footer-bottom a { color: inherit; }
+.footer-bottom a:hover { color: var(--gold); }
