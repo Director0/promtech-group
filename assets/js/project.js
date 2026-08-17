@@ -131,7 +131,7 @@ function renderBody(p) {
 
   $("#project-body").innerHTML = `
     <div class="project-main">
-      <a class="back-link" href="index.html#portfolio">${BACK} All projects</a>
+      <a class="back-link" href="index.html#portfolio">${BACK} Все проекты</a>
       ${p.intro ? `<p class="project-intro" data-reveal>${esc(p.intro)}</p>` : ""}
       ${facts ? `<div class="project-facts" data-reveal>${facts}</div>` : ""}
       <div class="project-desc" data-reveal data-reveal-delay="1">${desc}</div>
@@ -139,9 +139,9 @@ function renderBody(p) {
     </div>
     <aside>
       <div class="aside-card" data-reveal data-reveal-delay="1">
-        <h3>Specifications</h3>
+        <h3>Характеристики</h3>
         <table class="spec-table"><tbody>${specs}</tbody></table>
-        ${services ? `<h3 style="margin-top:26px;font-size:1rem">What we did</h3>
+        ${services ? `<h3 style="margin-top:26px;font-size:1rem">Мы выполнили</h3>
           <ul class="services-list">${services}</ul>` : ""}
       </div>
     </aside>`;
