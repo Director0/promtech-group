@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=31" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=32" />
   <!-- keep hero hidden until intro plays, but only when JS is available -->
   <script>document.documentElement.classList.add("preload");</script>
 </head>
@@ -103,7 +103,7 @@
   </section>
 
   <!-- ================= PORTFOLIO ================= -->
-  <section class="section" id="portfolio">
+  <section class="section portfolio" id="portfolio">
     <div class="container">
       <div class="portfolio-head">
         <div>
@@ -111,9 +111,27 @@
           <h2 class="section-title" id="portfolio-title" data-reveal data-reveal-delay="1"></h2>
           <p class="lead" id="portfolio-subtitle" data-reveal data-reveal-delay="2"></p>
         </div>
-        <div class="filters" id="filters" data-reveal data-reveal-delay="2"></div>
       </div>
-      <div class="projects-grid projects-stack" id="projects-grid"></div>
+    </div>
+    <!-- card deck: pinned while the fan of project cards turns with the scroll (fx.js) -->
+    <div class="deck" id="deck">
+      <div class="deck-stage">
+        <div class="container deck-bar">
+          <div class="filters" id="filters"></div>
+          <p class="deck-count" aria-live="polite"><b id="deck-cur">01</b> / <span id="deck-total">01</span></p>
+        </div>
+        <div class="deck-fan" id="projects-grid"></div>
+        <div class="container deck-foot">
+          <button class="deck-nav" id="deck-prev" type="button" aria-label="Предыдущий проект">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="deck-progress" aria-hidden="true"><span id="deck-bar"></span></div>
+          <button class="deck-nav" id="deck-next" type="button" aria-label="Следующий проект">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <p class="deck-hint" id="deck-hint">Листайте, чтобы перебрать колоду</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -221,7 +239,7 @@
   <script src="assets/js/cookie.js?v=1"></script>
   <!-- 2) inertial scroll + shared effects (grain, spotlight, card stack, tagline) -->
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="assets/js/fx.js?v=1"></script>
+  <script src="assets/js/fx.js?v=2"></script>
   <!-- 3) Three.js module resolution for the 3D hero scene -->
   <script type="importmap">
   {
@@ -232,7 +250,7 @@
   }
   </script>
   <!-- 4) page logic + 3D scene (ES modules, deferred automatically) -->
-  <script type="module" src="assets/js/main.js?v=20"></script>
+  <script type="module" src="assets/js/main.js?v=21"></script>
   <script type="module" src="assets/js/scene.js?v=8"></script>
 </body>
 </html>

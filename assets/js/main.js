@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFinalCtaVideo();
 
   // scroll-linked effects from fx.js need the built DOM
-  if (window.FX) { FX.initStack($("#projects-grid")); FX.initTagline($("#tagline-text")); }
+  if (window.FX) { FX.initDeck($("#deck")); FX.initTagline($("#tagline-text")); }
 });
 
 /* hide a whole section when its config block is empty */
@@ -214,27 +214,46 @@ function buildPortfolio() {
       `<button class="filter${i === 0 ? " active" : ""}" data-filter="${esc(c)}">${esc(c)}</button>`).join("");
   }
 
-  // Cards form a sticky "stack": each one pins below the nav and the next one
-  // slides over it (depth effect in fx.js). --i staggers the pinned offsets.
-  const total = String(projects.length).padStart(2, "0");
-  $("#projects-grid").innerHTML = projects.map((pr, i) => `
+  // Each project is a real card: a face (corner index, photo, title) and a back
+  // with the brand mark. fx.js deals them from a pile into a fan that turns
+  // while the page scrolls.
+  const mark = brandLogoHTML(C.brand || {});
+  $("#projects-grid").innerHTML = projects.map((pr, i) => {
+    const num = String(i + 1).padStart(2, "0");
+    return `
     <a class="card" href="project.html?id=${encodeURIComponent(pr.id)}" data-cat="${esc(pr.category || "")}"
-       style="--i:${i}" aria-label="${esc(pr.title)} — view project">
-      <span class="card-media">
-        <img class="card-img" src="${esc(pr.thumb || pr.heroSrc)}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
-             data-ph="${esc(pr.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
-        ${pr.status ? `<span class="card-status">${esc(pr.status)}</span>` : ""}
+       aria-label="${esc(pr.title)} — view project">
+      <span class="pcard-inner">
+        <span class="pcard-face">
+          <span class="pcard-top">
+            <span class="pcard-num">${num}</span>
+            <span class="pcard-suit" aria-hidden="true"></span>
+          </span>
+          <span class="pcard-media">
+            <img class="card-img" src="${esc(pr.thumb || pr.heroSrc)}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
+                 data-ph="${esc(pr.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
+            ${pr.status ? `<span class="card-status">${esc(pr.status)}</span>` : ""}
+          </span>
+          <span class="pcard-body">
+            <span class="card-cat">${esc(pr.category || "")} · ${esc(pr.year || "")}</span>
+            <h3 class="card-title">${esc(pr.title)}</h3>
+            <span class="card-meta">${esc(pr.location || "")}</span>
+            <p class="card-summary">${esc(pr.summary || "")}</p>
+            <span class="card-cta">Смотреть проект ${ICON.arrow}</span>
+          </span>
+          <span class="pcard-corner" aria-hidden="true">${num}</span>
+          <span class="pcard-glare" aria-hidden="true"></span>
+        </span>
+        <span class="pcard-back" aria-hidden="true">
+          <svg class="pcard-pattern" width="100%" height="100%"><defs>
+            <pattern id="pcp-${i}" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <path d="M0 0V12" stroke="currentColor" stroke-width="1"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#pcp-${i})"/></svg>
+          <span class="pcard-back-mark">${mark}</span>
+        </span>
       </span>
-      <span class="card-arrow" aria-hidden="true">${ICON.arrow}</span>
-      <div class="card-overlay">
-        <div class="card-index">${String(i + 1).padStart(2, "0")} / ${total}</div>
-        <div class="card-cat">${esc(pr.category || "")} · ${esc(pr.year || "")}</div>
-        <h3 class="card-title">${esc(pr.title)}</h3>
-        <div class="card-meta">${esc(pr.location || "")}</div>
-        <p class="card-summary">${esc(pr.summary || "")}</p>
-        <span class="card-cta">Смотреть проект ${ICON.arrow}</span>
-      </div>
-    </a>`).join("");
+    </a>`;
+  }).join("");
 
   // filtering
   const grid = $("#projects-grid");
@@ -248,7 +267,7 @@ function buildPortfolio() {
       const show = f === "All" || card.dataset.cat === f;
       card.style.display = show ? "" : "none";
     });
-    if (window.FX && FX.updateStack) FX.updateStack();
+    if (window.FX && FX.refreshDeck) FX.refreshDeck();
   });
 }
 
@@ -470,6 +489,6 @@ function initScrollSpy() {
         links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === `#${en.target.id}`));
       }
     });
-  }, { threshold: 0.5 });
+  }, { rootMargin: "-45% 0px -54% 0px", threshold: 0 }); // a line mid-screen: works for very tall sections
   sections.forEach(s => io.observe(s));
 }
