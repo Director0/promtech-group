@@ -119,7 +119,7 @@ window.SITE_CONFIG = {
   scene: {
     enabled: true,
     dayCycleSeconds: 90,                 // a full day (24 h) in seconds
-    startHour: { dark: 17.5, light: 11 }, // time of day when the page opens, per theme
+    startHour: { dark: 18.6, light: 11 }, // time of day when the page opens, per theme (also sets the hero colours)
     traffic: 1,                          // 0.4 … 1.6: amount of traffic
     autoOrbit: true,                     // the camera slowly circles the quarter
     seed: 2014,

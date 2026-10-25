@@ -775,6 +775,8 @@ function boot() {
   const DAY = Math.max(30, CFG.dayCycleSeconds || 90);
   const sh = CFG.startHour || {};
   let startHour = isLightTheme() ? (sh.light != null ? sh.light : 11) : (sh.dark != null ? sh.dark : 17.5);
+  const hourParam = location.search.match(/[?&]hour=([\d.]+)/);   // e.g. ?hour=12 to open at noon
+  if (hourParam) startHour = clamp(parseFloat(hourParam[1]), 0, 23.99);
   let tod = startHour;
   function sky(t) {
     tod = (startHour + (t / DAY) * 24) % 24;
@@ -791,6 +793,85 @@ function boot() {
     moon.intensity = 1.1 * night;
     lampGlowMat.uniforms.uOn.value = smoothstep(0.25, 0.7, night);
     if (U.fountainColor) U.fountainColor.value.copy(C_WATER_DAY).lerp(C_WATER_NIGHT, night);
+  }
+
+  /* ---------- hero environment follows the scene's time of day ----------
+     The hero (and the nav while it floats over it) gets its own colours:
+     night → dark, dawn and sunset → warm dark, day → light. The rest of the
+     site keeps the chosen theme; while the hero scrolls away its colours blend
+     into the theme, so the next section joins it seamlessly. */
+  const navEl = document.getElementById("nav");
+  const TH = SITE.theme || {};
+  const DARK_T = TH.colors || {}, LIGHT_T = Object.assign({}, DARK_T, TH.light || {});
+  function rgba(c) {
+    c = String(c || "").trim();
+    if (c[0] === "#") {
+      const h = c.length === 4 ? c.slice(1).split("").map((x) => x + x).join("") : c.slice(1);
+      return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16), 1];
+    }
+    const m = c.match(/[\d.]+/g) || [0, 0, 0, 1];
+    return [+m[0], +m[1], +m[2], m[3] != null ? +m[3] : 1];
+  }
+  function palette(t, light) {
+    return {
+      "--bg": rgba(t.bg), "--bg-elevated": rgba(t.bgElevated), "--text": rgba(t.text), "--muted": rgba(t.muted),
+      "--gold": rgba(t.gold), "--gold-soft": rgba(t.goldSoft), "--line": rgba(t.line),
+      "--on-accent": rgba(light ? "#FFFFFF" : "#131209"),
+      "--glass": rgba(light ? "rgba(255,255,255,0.72)" : "rgba(0,0,0,0.62)"),
+      "--glass-edge": rgba(light ? "rgba(13,33,80,0.12)" : "rgba(255,255,255,0.12)"),
+      "--shadow": rgba(light ? "rgba(13,33,80,0.28)" : "rgba(0,0,0,0.85)"),
+      "--hero-grad-from": rgba(light ? "#000000" : "#FFFFFF"),
+      "--hero-grad-to": rgba(light ? "#666666" : "#9B9B9B"),
+      "--hero-summary": rgba(light ? "#2C3A52" : t.muted)
+    };
+  }
+  const PAL_D = palette(DARK_T, false), PAL_L = palette(LIGHT_T, true);
+  const ENV_KEYS = Object.keys(PAL_D);
+  // colour of the sky behind the diorama by hour (D / L = the theme backgrounds)
+  const SKY_KEYS = [[0, "D"], [4.8, "D"], [5.6, "#120f0c"], [6.3, "#2b2117"], [7.1, "#efe6d8"], [8.5, "L"],
+    [16.3, "L"], [17.2, "#f0e4d2"], [17.9, "#2d2218"], [18.8, "#0c0e14"], [20, "D"], [24, "D"]]
+    .map(([h, c]) => [h, c === "D" ? PAL_D["--bg"] : c === "L" ? PAL_L["--bg"] : rgba(c)]);
+  const mixA = (a, b, t, out) => { for (let i = 0; i < 4; i++) out[i] = a[i] + (b[i] - a[i]) * t; return out; };
+  const lumA = (c) => (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+  const cssA = (c) => c[3] >= 0.999
+    ? `rgb(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])})`
+    : `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${c[3].toFixed(3)})`;
+  const ENV = {}, OUT = {}, skyBg = [0, 0, 0, 1];
+  ENV_KEYS.forEach((k) => { ENV[k] = [0, 0, 0, 1]; OUT[k] = [0, 0, 0, 1]; });
+  const heroWritten = {}, navWritten = {};
+  let envLight = 0, navHasEnv = false;
+  function writeVars(el, cache) {
+    for (const k of ENV_KEYS) {
+      const v = cssA(OUT[k]);
+      if (cache[k] !== v) { el.style.setProperty(k, v); cache[k] = v; }
+    }
+  }
+  const scrollP = () => (hero ? clamp01(window.scrollY / (hero.offsetHeight * 0.85)) : 1);
+  function updateEnv(p) {
+    if (!hero) return;
+    let i = 0;
+    while (i < SKY_KEYS.length - 2 && SKY_KEYS[i + 1][0] <= tod) i++;
+    const [h0, c0] = SKY_KEYS[i], [h1, c1] = SKY_KEYS[i + 1];
+    mixA(c0, c1, smoothstep(0, 1, (tod - h0) / (h1 - h0)), skyBg);
+    const w = smoothstep(0.35, 0.6, lumA(skyBg));          // text palette flips with the sky
+    const theme = isLightTheme() ? PAL_L : PAL_D;
+    const sp = smoothstep(0, 1, p);
+    for (const k of ENV_KEYS) {
+      if (k === "--bg") mixA(skyBg, skyBg, 0, ENV[k]); else mixA(PAL_D[k], PAL_L[k], w, ENV[k]);
+      mixA(ENV[k], theme[k], sp, OUT[k]);
+    }
+    envLight = lumA(OUT["--bg"]);
+    writeVars(hero, heroWritten);
+    const fade = smoothstep(0, 0.3, p).toFixed(3);
+    if (heroWritten.fade !== fade) { hero.style.setProperty("--hero-fade", fade); heroWritten.fade = fade; }
+    if (!navEl) return;
+    if (sp < 0.999) {
+      writeVars(navEl, navWritten); navHasEnv = true;
+      navEl.dataset.env = envLight > 0.5 ? "light" : "dark";
+    } else if (navHasEnv) {                                   // past the hero: the nav is the site's again
+      ENV_KEYS.forEach((k) => { navEl.style.removeProperty(k); delete navWritten[k]; });
+      delete navEl.dataset.env; navHasEnv = false;
+    }
   }
 
   /* ---------- HUD + labels ---------- */
@@ -1192,6 +1273,8 @@ function boot() {
     U.intro.value = intro;
     world.position.y = -3 * (1 - easeInOut(intro));
     sky(t);
+    updateEnv(scrollP());
+    shadowCatcher.material.opacity = 0.55 * smoothstep(0.4, 0.75, envLight);
     const speed = trafficStep(dt);
     craneStep(dt); siteStep(dt);
     placeVehicles(dt, U.night.value);
@@ -1221,7 +1304,8 @@ function boot() {
   window.addEventListener("resize", resize, { passive: true });
 
   function applyTheme() {
-    shadowCatcher.material.opacity = isLightTheme() ? 0.55 : 0;
+    updateEnv(scrollP());
+    shadowCatcher.material.opacity = 0.55 * smoothstep(0.4, 0.75, envLight);
     if (!looping) render();
   }
 
@@ -1233,7 +1317,12 @@ function boot() {
     t = ((20 - startHour + 24) % 24) / 24 * DAY;
     U.intro.value = 1; world.position.y = 0;
     sky(t); trafficStep(0); placeVehicles(0.016, U.night.value); peopleStep(0, 0); craneMotion(0.016, 0); TL_UPDATE();
-    placeCamera(0, 0.016); updateHud(); render();
+    placeCamera(0, 0.016); updateHud(); applyTheme();
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(() => { ticking = false; applyTheme(); });
+    }, { passive: true });
   } else {
     let visible = true;
     const sync = () => {
@@ -1241,6 +1330,7 @@ function boot() {
       if (on === looping) return;
       looping = on; last = 0;
       renderer.setAnimationLoop(on ? frame : null);
+      if (!on) updateEnv(scrollP());
     };
     if (hero && "IntersectionObserver" in window) new IntersectionObserver((ents) => { visible = ents[0].isIntersecting; sync(); }).observe(hero);
     document.addEventListener("visibilitychange", sync);

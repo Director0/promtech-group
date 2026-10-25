@@ -185,7 +185,7 @@ html[data-theme="light"] .project-hero-meta { color: #C8C8C8; }
 html[data-theme="light"] .project-hero-meta b { color: #F5F5F5; }
 
 /* hero summary sits on the light hero in light mode → darken for clear contrast */
-html[data-theme="light"] .hero-summary { color: #2C3A52; }
+html[data-theme="light"] { --hero-summary: #2C3A52; }   /* scene.js overrides it inside the hero */
 
 /* ---------- Layout helpers ---------- */
 .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
@@ -315,6 +315,11 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; margin: 0; 
 .nav-logo .logo-light { display: none; }
 html[data-theme="light"] .nav-logo .logo-dark { display: none; }
 html[data-theme="light"] .nav-logo .logo-light { display: block; }
+/* logo follows the hero environment while the nav is over the hero */
+.nav[data-env="light"] .nav-logo .logo-dark { display: none; }
+.nav[data-env="light"] .nav-logo .logo-light { display: block; }
+.nav[data-env="dark"] .nav-logo .logo-dark { display: block; }
+.nav[data-env="dark"] .nav-logo .logo-light { display: none; }
 .nav-links { display: flex; gap: 4px; align-items: center; }
 .nav-links a {
   position: relative; padding: 8px 12px; border-radius: 9999px;
@@ -402,7 +407,19 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 /* =============================================================================
    HERO
    ========================================================================== */
-.hero { position: relative; min-height: 100dvh; display: flex; align-items: center; overflow: hidden; }
+/* the hero has its own environment: scene.js sets the colour variables on it
+   (and on the nav while it floats over the hero) from the scene's time of day,
+   blending back to the site theme as the hero scrolls away */
+.hero { position: relative; min-height: 100dvh; display: flex; align-items: center; overflow: hidden; background: var(--bg); color: var(--text); }
+/* the site theme's background, resolved at the root (the hero overrides --bg) */
+:root { --site-bg: var(--bg); }
+/* while the hero scrolls away, its bottom edge melts into the next section
+   (--hero-fade is driven by scene.js; invisible when hero and theme match) */
+.hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 32vh; z-index: 1; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--site-bg));
+  opacity: var(--hero-fade, 0);
+}
 #scene-canvas {
   position: absolute; inset: 0; width: 100%; height: 100%;
   z-index: 0; display: block;
@@ -434,7 +451,7 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
   -webkit-text-fill-color: transparent; color: transparent;
 }
 .hero h1 em { font-style: normal; color: var(--gold); font-weight: 600; }
-.hero-summary { margin: 24px 0 32px; max-width: 680px; color: var(--muted); font-size: 18px; line-height: 28px; }
+.hero-summary { margin: 24px 0 32px; max-width: 680px; color: var(--hero-summary, var(--muted)); font-size: 18px; line-height: 28px; }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
 /* hero stats strip */
