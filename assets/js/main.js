@@ -82,14 +82,22 @@ function buildHero() {
       <div class="stat-label">${esc(s.label)}</div>
     </div>`).join("");
 
-  // stages of the 3D scene's cycle
+  // live panel of the 3D quarter: clock of the scene's day + optional sound
   const sc = C.scene || {};
   const proc = $("#hero-process");
   if (proc) {
-    if (sc.enabled === false || !(sc.stages || []).length) proc.hidden = true;
-    else proc.innerHTML =
-      `<ol>${sc.stages.map((s, i) => `
-        <li><span class="hp-num">${String(i + 1).padStart(2, "0")}</span><span class="hp-label">${esc(s)}</span><span class="hp-bar"></span></li>`).join("")}</ol>` +
+    if (sc.enabled === false) proc.hidden = true;
+    else proc.innerHTML = `
+      <div class="hero-live">
+        <span class="hl-pulse" aria-hidden="true"></span>
+        <span class="hl-time" id="scene-time">--:--</span>
+        <span class="hl-phase" id="scene-phase"></span>
+        <button class="hl-sound" id="scene-sound" type="button" aria-pressed="false">
+          <svg class="hl-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 4 6M21 9l-4 6"/></svg>
+          <svg class="hl-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+          <span>${esc(sc.soundLabel || "Звук")}</span>
+        </button>
+      </div>` +
       (sc.hint ? `<p class="hero-process-hint">${esc(sc.hint)}</p>` : "");
   }
 }

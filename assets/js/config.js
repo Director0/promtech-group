@@ -107,23 +107,33 @@ window.SITE_CONFIG = {
   },
 
   /* ---------------------------------------------------------------------------
-     5) HERO 3D SCENE — «От изысканий до ключей».
-        A residential quarter is born the way every project is: survey points
-        spread over the site, drawing lines trace every floor, then the floors
-        are built one by one. The cursor cuts a section through the buildings
-        to show the structure inside; drag turns the quarter; click sends a
-        pulse through the ground; scrolling down explodes it floor by floor.
+     5) HERO 3D SCENE — «Квартал живёт».
+        A living residential quarter: cars follow each other and stop at the
+        traffic light while people cross, a bus serves its stop, a truck brings
+        modules and the tower crane builds a new house floor by floor (it is
+        handed over, lights up, and the next project begins). Day turns to
+        night. Hovering a house shows one of the projects below (click opens
+        it); drag turns the quarter. City sound is off until the visitor turns
+        it on.
      ------------------------------------------------------------------------ */
   scene: {
     enabled: true,
-    autoRotate: true,      // the quarter slowly turns
-    rotateSpeed: 0.05,     // turn speed
-    cycleSeconds: 15,      // build → hold → back to the drawing, then again
-    explodeOnScroll: true, // floors separate while the hero scrolls away
-    seed: 2014,            // change to get a different layout of the quarter
-    // Stage labels shown next to the scene (they light up with the animation)
-    stages: ["Изыскания", "Проектирование", "Строительство"],
-    hint: "Наведите курсор, чтобы заглянуть в конструкцию. Потяните, чтобы повернуть квартал."
+    dayCycleSeconds: 90,                 // a full day (24 h) in seconds
+    startHour: { dark: 17.5, light: 11 }, // time of day when the page opens, per theme
+    traffic: 1,                          // 0.4 … 1.6: amount of traffic
+    autoOrbit: true,                     // the camera slowly circles the quarter
+    seed: 2014,
+    phases: ["Ночь", "Утро", "День", "Вечер"],
+    siteLabel: "Строится сейчас",        // label of the construction site on hover
+    soundLabel: "Звук",
+    hint: "Наведите на дом, чтобы узнать проект. Потяните, чтобы повернуть квартал.",
+    // captions pinned above the construction site ({n} and {max} are replaced)
+    captions: {
+      delivery: "Модули прибыли на площадку",
+      floor: "Смонтирован этаж {n} из {max}",
+      done: "Дом сдан. В окнах загорается свет",
+      next: "Следующий проект начинается с чертежа"
+    }
   },
 
   /* ---------------------------------------------------------------------------

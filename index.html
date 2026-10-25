@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=34" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=35" />
   <!-- keep hero hidden until intro plays, but only when JS is available -->
   <script>document.documentElement.classList.add("preload");</script>
 </head>
@@ -54,8 +54,11 @@
         <div class="hero-stats" id="hero-stats"></div>
       </div>
     </div>
-    <!-- stages of the scene's cycle (lit by scene.js) -->
-    <div class="hero-process" id="hero-process" aria-hidden="true"></div>
+    <!-- live panel of the 3D quarter (clock + sound), label of the hovered house,
+         caption pinned above the construction site — all driven by scene.js -->
+    <div class="hero-process" id="hero-process"></div>
+    <a class="scene-label" id="scene-label" hidden></a>
+    <p class="scene-caption" id="scene-caption" aria-live="polite"></p>
   </section>
 
   <!-- ================= MARQUEE (areas of work) ================= -->
@@ -234,7 +237,7 @@
 
   <!-- ================= SCRIPTS ================= -->
   <!-- 1) config + theme load first (plain scripts, set globals) -->
-  <script src="assets/js/config.js?v=21"></script>
+  <script src="assets/js/config.js?v=22"></script>
   <script src="assets/js/theme.js?v=6"></script>
   <script src="assets/js/placeholder.js?v=2"></script>
   <script src="assets/js/cursor.js?v=1"></script>
@@ -252,7 +255,7 @@
   }
   </script>
   <!-- 4) page logic + 3D scene (ES modules, deferred automatically) -->
-  <script type="module" src="assets/js/main.js?v=22"></script>
-  <script type="module" src="assets/js/scene.js?v=12"></script>
+  <script type="module" src="assets/js/main.js?v=23"></script>
+  <script type="module" src="assets/js/scene.js?v=16"></script>
 </body>
 </html>
