@@ -74,7 +74,7 @@ function buildAI(ai) {
   $("#ai-title").textContent = ai.title || "";
   $("#ai-desc").innerHTML = (ai.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join("");
   $("#ai-gallery").innerHTML = (ai.gallery || []).map(src =>
-    `<img src="${esc(src)}" alt="${esc(ai.title || "")}" loading="lazy" decoding="async" data-zoom
+    `<img src="${esc(window.optImg ? optImg(src, "hero") : src)}" data-full="${esc(src)}" alt="${esc(ai.title || "")}" loading="lazy" decoding="async" data-zoom
           data-ph="${esc(ai.title || "AI")}" onerror="window.PH&&PH.set(this,this.dataset.ph)">`
   ).join("");
 }

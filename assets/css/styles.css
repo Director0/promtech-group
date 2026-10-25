@@ -816,6 +816,7 @@ html[data-theme="light"] .partners-wall { --paper: #ffffff; }
 .pcard-inner {
   position: absolute; inset: 0; border-radius: inherit;
   transform-style: preserve-3d; transform: rotateY(180deg);
+  will-change: transform;            /* flipped / tilted every frame by fx.js */
 }
 .pcard-face, .pcard-back {
   position: absolute; inset: 0; border-radius: inherit; overflow: hidden;
@@ -835,6 +836,7 @@ html[data-theme="light"] .partners-wall { --paper: #ffffff; }
 .pcard-face::after { /* dims cards away from the centre (--dim from fx.js) */
   content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background: var(--bg); opacity: var(--dim, 0);
+  will-change: opacity;              /* own layer: changing it never repaints the card */
 }
 .pcard-top { display: flex; justify-content: space-between; align-items: center; padding: 4px 8px 12px; }
 .pcard-num, .pcard-corner { font-size: 14px; line-height: 20px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
@@ -877,6 +879,7 @@ html[data-theme="light"] .partners-wall { --paper: #ffffff; }
   position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: inherit;
   background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.28), transparent 55%);
   mix-blend-mode: soft-light; opacity: var(--glare, 0);
+  will-change: opacity;
 }
 html[data-theme="light"] .pcard-glare {
   mix-blend-mode: normal;
@@ -1279,6 +1282,7 @@ html[data-theme="light"] .services-list li { color: var(--gold); }
    ========================================================================== */
 [data-reveal] {
   opacity: 0; transform: translateY(64px); filter: blur(12px);
+  will-change: transform, opacity, filter;
   transition: opacity var(--dur-reveal) var(--ease), transform var(--dur-reveal) var(--ease), filter var(--dur-reveal) var(--ease);
 }
 [data-reveal].in { opacity: 1; transform: none; filter: none; }

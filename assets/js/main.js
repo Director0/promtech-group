@@ -2,6 +2,8 @@
    main.js — builds the HOME page from config.js and wires up interactions.
    ========================================================================== */
 const C = window.SITE_CONFIG || {};
+/* light web copy of an image (tools/optimize-images.py), or the original */
+const O = (s, k) => (window.optImg ? window.optImg(s, k) : s);
 
 /* ---------- tiny helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -121,7 +123,7 @@ function buildAbout() {
   const aboutImg = $("#about-image");
   aboutImg.dataset.ph = "Meridian Build — Studio";
   aboutImg.onerror = () => window.PH && PH.set(aboutImg, aboutImg.dataset.ph);
-  if (a.image) aboutImg.src = a.image;
+  if (a.image) aboutImg.src = O(a.image, "hero");
 
   // floating badge overlapping the image
   const badge = $("#about-badge");
@@ -297,7 +299,7 @@ function buildPortfolio() {
             <span class="pcard-suit" aria-hidden="true"></span>
           </span>
           <span class="pcard-media">
-            <img class="card-img" src="${esc(pr.thumb || pr.heroSrc)}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
+            <img class="card-img" src="${esc(O(pr.thumb || pr.heroSrc, "card"))}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
                  data-ph="${esc(pr.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
             ${pr.status ? `<span class="card-status">${esc(pr.status)}</span>` : ""}
           </span>
@@ -361,7 +363,7 @@ function buildNews() {
     <button class="news-card" data-news-id="${esc(it.id)}" data-reveal data-reveal-delay="${(i % 3) + 1}"
             aria-label="${esc(it.title)} — открыть">
       <span class="news-card-media">
-        <img src="${esc(it.thumb || "")}" alt="${esc(it.title)}" loading="lazy" decoding="async"
+        <img src="${esc(O(it.thumb || "", "card"))}" alt="${esc(it.title)}" loading="lazy" decoding="async"
              data-ph="${esc(it.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
       </span>
       <time class="news-card-date">${esc(fmtDate(it.date))}</time>
@@ -382,7 +384,7 @@ function initNewsModal() {
   function open(it) {
     img.dataset.ph = it.title;
     img.onerror = () => window.PH && PH.set(img, it.title);
-    img.src = it.thumb || "";
+    img.src = O(it.thumb || "", "hero");
     img.alt = it.title || "";
     dateEl.textContent = fmtDate(it.date);
     titleEl.textContent = it.title || "";
@@ -501,11 +503,17 @@ function initNavBehavior() {
   links.addEventListener("click", (e) => { if (e.target.closest("a")) links.classList.remove("open"); });
 }
 
+/* after the fade up, drop the GPU layer the element was prepared with */
+function release(el) {
+  const done = (e) => { if (e.target === el && e.propertyName === "opacity") { el.style.willChange = "auto"; el.removeEventListener("transitionend", done); } };
+  el.addEventListener("transitionend", done);
+}
+
 function initReveal() {
   const items = document.querySelectorAll("[data-reveal]");
   if (!("IntersectionObserver" in window)) { items.forEach(i => i.classList.add("in")); return; }
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); release(en.target); } });
   }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
   items.forEach(i => io.observe(i));
 }
