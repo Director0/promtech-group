@@ -18,9 +18,14 @@ const ICON = {
 document.addEventListener("DOMContentLoaded", () => {
   buildNav();
   buildHero();
+  buildMarquee();
   buildAbout();
+  buildTagline();
+  buildBenefits();
+  buildProcess();
   buildPortfolio();
   buildNews();
+  buildFinalCta();
   buildContact();
   buildFooter();
 
@@ -29,7 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeroIntro();
   initScrollSpy();
   initNewsModal();
+  initFinalCtaVideo();
+
+  // scroll-linked effects from fx.js need the built DOM
+  if (window.FX) { FX.initStack($("#projects-grid")); FX.initTagline($("#tagline-text")); }
 });
+
+/* hide a whole section when its config block is empty */
+function hide(sel) { const el = $(sel); if (el) el.hidden = true; }
 
 /* logo markup: image (with optional light variant) if a source is set, else text */
 function brandLogoHTML(b) {
@@ -89,6 +101,102 @@ function buildAbout() {
   aboutImg.dataset.ph = "Meridian Build — Studio";
   aboutImg.onerror = () => window.PH && PH.set(aboutImg, aboutImg.dataset.ph);
   if (a.image) aboutImg.src = a.image;
+
+  // floating badge overlapping the image
+  const badge = $("#about-badge");
+  if (badge && a.badge && a.badge.value) {
+    badge.innerHTML = `<span class="about-badge-value">${esc(a.badge.value)}</span>` +
+                      `<span class="about-badge-label">${esc(a.badge.label || "")}</span>`;
+    badge.hidden = false;
+  }
+}
+
+/* ---------- MARQUEE (areas of work, endless loop) ---------- */
+function buildMarquee() {
+  const items = C.marquee || [];
+  const el = $("#marquee");
+  if (!el) return;
+  if (!items.length) { el.hidden = true; return; }
+  const row = items.map(t => `<span class="marquee-item">${esc(t)}</span>`).join("");
+  // two identical rows → translate by -50% for a seamless loop; the copy is hidden from AT
+  el.innerHTML = `<div class="marquee-track"><div class="marquee-row">${row}</div>` +
+                 `<div class="marquee-row" aria-hidden="true">${row}</div></div>`;
+}
+
+/* ---------- TAGLINE (each word lights up on scroll, see fx.js) ---------- */
+function buildTagline() {
+  const lines = (C.tagline && C.tagline.lines) || [];
+  if (!lines.length) return hide("#tagline");
+  // --w = word position inside its line → words on one line light up in reading order
+  $("#tagline-text").innerHTML = lines.map(line =>
+    `<span class="tl-line">${line.split(/\s+/).filter(Boolean)
+      .map((w, k) => `<span class="tl-word" style="--w:${k}">${esc(w)}</span>`).join(" ")}</span>`).join(" ");
+}
+
+/* ---------- BENEFITS ---------- */
+function buildBenefits() {
+  const b = C.benefits || {};
+  if (!(b.items || []).length) return hide("#benefits");
+  $("#benefits-eyebrow").textContent = b.eyebrow || "";
+  $("#benefits-title").textContent = b.title || "";
+  $("#benefits-proof").innerHTML = (b.proof || []).map(p => `
+    <div class="proof">
+      <span class="proof-value">${esc(p.value)}</span>
+      <span class="proof-label">${esc(p.label)}</span>
+    </div>`).join("");
+  $("#benefits-list").innerHTML = b.items.map((it, i) => `
+    <li class="benefit" data-reveal data-reveal-delay="${(i % 2) + 1}">
+      <span class="benefit-num">${String(i + 1).padStart(2, "0")}</span>
+      <div>
+        <h3 class="benefit-title">${esc(it.title)}</h3>
+        <p class="benefit-text">${esc(it.text)}</p>
+        ${it.link ? `<a class="text-link" href="${esc(it.link.href)}">${esc(it.link.label)} ${ICON.arrow}</a>` : ""}
+      </div>
+    </li>`).join("");
+}
+
+/* ---------- PROCESS (three steps, line draws on reveal) ---------- */
+function buildProcess() {
+  const p = C.process || {};
+  if (!(p.steps || []).length) return hide("#process");
+  $("#process-eyebrow").textContent = p.eyebrow || "";
+  $("#process-title").textContent = p.title || "";
+  $("#process-steps").innerHTML = p.steps.map((s, i) => `
+    <li class="process-step" data-reveal data-reveal-delay="${i + 1}">
+      <span class="process-node" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+      <h3 class="process-title">${esc(s.title)}</h3>
+      <p class="process-text">${esc(s.text)}</p>
+    </li>`).join("");
+}
+
+/* ---------- FINAL CTA ---------- */
+function buildFinalCta() {
+  const f = C.finalCta || {};
+  if (!f.cta) return hide("#final-cta");
+  $("#final-cta-eyebrow").textContent = f.eyebrow || "";
+  $("#final-cta-title").innerHTML = (f.titleLines || []).map(t => `<span class="line">${esc(t)}</span>`).join(" ");
+  $("#final-cta-text").textContent = f.text || "";
+  $("#final-cta-actions").innerHTML =
+    `<a class="btn btn-primary btn-lg" href="${esc(f.cta.href)}">${esc(f.cta.label)} ${ICON.arrow}</a>`;
+  const v = $("#final-cta-video");
+  if (f.poster) v.poster = f.poster;
+  if (f.video) v.dataset.src = f.video;
+}
+
+/* play the dimmed background video only while the block is on screen */
+function initFinalCtaVideo() {
+  const v = $("#final-cta-video");
+  if (!v || !v.dataset.src || !("IntersectionObserver" in window)) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const io = new IntersectionObserver((ents) => {
+    ents.forEach(en => {
+      if (en.isIntersecting) {
+        if (!v.src) v.src = v.dataset.src;
+        v.play().catch(() => {});
+      } else v.pause();
+    });
+  }, { threshold: 0.1 });
+  io.observe(v);
 }
 
 /* ---------- PORTFOLIO ---------- */
@@ -106,18 +214,25 @@ function buildPortfolio() {
       `<button class="filter${i === 0 ? " active" : ""}" data-filter="${esc(c)}">${esc(c)}</button>`).join("");
   }
 
+  // Cards form a sticky "stack": each one pins below the nav and the next one
+  // slides over it (depth effect in fx.js). --i staggers the pinned offsets.
+  const total = String(projects.length).padStart(2, "0");
   $("#projects-grid").innerHTML = projects.map((pr, i) => `
     <a class="card" href="project.html?id=${encodeURIComponent(pr.id)}" data-cat="${esc(pr.category || "")}"
-       data-reveal data-reveal-delay="${(i % 3) + 1}" aria-label="${esc(pr.title)} — view project">
-      <img class="card-img" src="${esc(pr.thumb || pr.heroSrc)}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
-           data-ph="${esc(pr.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
-      ${pr.status ? `<span class="card-status">${esc(pr.status)}</span>` : ""}
+       style="--i:${i}" aria-label="${esc(pr.title)} — view project">
+      <span class="card-media">
+        <img class="card-img" src="${esc(pr.thumb || pr.heroSrc)}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
+             data-ph="${esc(pr.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
+        ${pr.status ? `<span class="card-status">${esc(pr.status)}</span>` : ""}
+      </span>
       <span class="card-arrow" aria-hidden="true">${ICON.arrow}</span>
       <div class="card-overlay">
+        <div class="card-index">${String(i + 1).padStart(2, "0")} / ${total}</div>
         <div class="card-cat">${esc(pr.category || "")} · ${esc(pr.year || "")}</div>
         <h3 class="card-title">${esc(pr.title)}</h3>
         <div class="card-meta">${esc(pr.location || "")}</div>
         <p class="card-summary">${esc(pr.summary || "")}</p>
+        <span class="card-cta">Смотреть проект ${ICON.arrow}</span>
       </div>
     </a>`).join("");
 
@@ -133,6 +248,7 @@ function buildPortfolio() {
       const show = f === "All" || card.dataset.cat === f;
       card.style.display = show ? "" : "none";
     });
+    if (window.FX && FX.updateStack) FX.updateStack();
   });
 }
 
@@ -240,7 +356,30 @@ function buildContact() {
 
   const form = $("#contact-form");
   if (c.formAction) form.setAttribute("action", c.formAction), form.setAttribute("method", "post");
+
+  // Inline client-side validation (no browser bubbles, no alerts).
+  const rules = [
+    { el: $("#f-name"),  err: $("#f-name-err"),  test: v => v.trim().length > 1,
+      msg: "Укажите, как к вам обращаться." },
+    { el: $("#f-email"), err: $("#f-email-err"), test: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+      msg: "Проверьте адрес почты, например name@company.ru" },
+    { el: $("#f-msg"),   err: $("#f-msg-err"),   test: v => v.trim().length > 9,
+      msg: "Опишите задачу хотя бы в одном предложении." }
+  ].filter(r => r.el && r.err);
+  const check = (r) => {
+    const ok = r.test(r.el.value);
+    r.err.textContent = ok ? "" : r.msg;
+    r.el.setAttribute("aria-invalid", ok ? "false" : "true");
+    return ok;
+  };
+  rules.forEach(r => {
+    r.el.addEventListener("blur", () => { if (r.el.value) check(r); });
+    r.el.addEventListener("input", () => { if (r.el.getAttribute("aria-invalid") === "true") check(r); });
+  });
+
   form.addEventListener("submit", (e) => {
+    const bad = rules.filter(r => !check(r));
+    if (bad.length) { e.preventDefault(); bad[0].el.focus(); return; }
     if (!c.formAction) {
       e.preventDefault();
       const btn = submit || form.querySelector("button[type=submit]");

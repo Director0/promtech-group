@@ -23,16 +23,18 @@ window.SITE_CONFIG = {
         These are injected as CSS variables, so every section updates at once.
      ------------------------------------------------------------------------ */
   theme: {
+    // DARK THEME — flat neutral black surfaces + a single gold accent
+    // (redesign: no tinted navy surfaces, no background gradients).
     colors: {
-      bg:        "#04060C", // page background (rich black)
-      bgElevated:"#0A1530", // cards / elevated surfaces (deep navy)
-      navy:      "#0D2150", // ← MAIN BRAND COLOR (rich royal navy)
-      navyLight: "#1B3F86", // electric deep-blue for gradients / glow / accents
-      gold:      "#D4A95C", // ← ACCENT (warm rich gold)
-      goldSoft:  "#F1D7A0", // light champagne gold for glows / highlights
-      text:      "#EDF2FA", // primary text
-      muted:     "#97AAC6", // secondary text (bluish to match navy)
-      line:      "rgba(212,169,92,0.20)" // hairline borders
+      bg:        "#000000", // page background (flat black)
+      bgElevated:"#181818", // cards / elevated surfaces
+      navy:      "#0D2150", // brand navy (logo + 3D scene tint only)
+      navyLight: "#1B3F86",
+      gold:      "#D4A95C", // ← THE ONE ACCENT (buttons, highlights)
+      goldSoft:  "#F1D7A0", // accent hover
+      text:      "#F5F5F5", // primary text
+      muted:     "#9B9B9B", // secondary text (neutral gray)
+      line:      "rgba(255,255,255,0.10)" // hairline borders (neutral)
     },
 
     // LIGHT THEME — overrides applied when the user flips the toggle.
@@ -51,8 +53,10 @@ window.SITE_CONFIG = {
     fonts: {
       // Loaded from Google Fonts in the HTML <head>.
       // To use different fonts: change these AND the <link> in index.html / project.html.
-      display: "'Fraunces', serif",   // headings — modern editorial serif
-      body:    "'Manrope', sans-serif" // everything else — clean premium sans
+      // One typeface for the whole site (redesign). Headings use heavier weights
+      // and tighter tracking of the same family.
+      display: "'Manrope', sans-serif",
+      body:    "'Manrope', sans-serif"
     }
   },
 
@@ -145,7 +149,101 @@ window.SITE_CONFIG = {
       { label: "Лицензии",     href: "licenses.html", style: "primary" },
       { label: "Деятельность", href: "specs.html",    style: "ghost" }
     ],
-    image: "./assets/models/hq.png"
+    image: "./assets/models/hq.png",
+    // Floating badge that overlaps the About image (leave value "" to hide).
+    badge: { value: "2014", label: "год основания компании" }
+  },
+
+  /* ---------------------------------------------------------------------------
+     6a) REDESIGN BLOCKS (home page). Each block hides itself when left empty.
+     ------------------------------------------------------------------------ */
+
+  // Running line right under the hero: areas of work. Loops endlessly,
+  // pauses on hover. Add or remove phrases freely.
+  marquee: [
+    "Инженерные изыскания",
+    "Архитектурное проектирование",
+    "Конструктивные решения",
+    "Инженерные сети",
+    "BIM моделирование",
+    "Сопровождение экспертизы",
+    "Строительство",
+    "Сдача под ключ"
+  ],
+
+  // Large tagline that lights up word by word while scrolling.
+  // Each string is one line; break lines where the thought breaks.
+  tagline: {
+    lines: [
+      "Двенадцать лет мы превращаем",
+      "сложные инженерные задачи в здания,",
+      "где людям хорошо жить и работать."
+    ]
+  },
+
+  // Benefits: sticky heading + proof numbers (left), benefit list (right).
+  benefits: {
+    eyebrow: "Почему мы",
+    title: "Отвечаем за проект от первой скважины до ключей",
+    // Proof numbers shown under the heading.
+    proof: [
+      { value: "142", label: "объекта в эксплуатации" },
+      { value: "38",  label: "городов присутствия" },
+      { value: "60+", label: "специалистов в штате" }
+    ],
+    items: [
+      {
+        title: "Полный цикл в одних руках",
+        text: "Изыскания, проект, строительство и сдачу ведёт одна команда. Решения не теряются между подрядчиками, а сроки не расходятся по разным договорам.",
+        link: { label: "Деятельность компании", href: "specs.html" }
+      },
+      {
+        title: "Допуски на все виды работ",
+        text: "Свидетельства СРО на проектирование и строительство, лицензия МЧС и допуск к особо опасным объектам. Документы открыты для проверки.",
+        link: { label: "Смотреть лицензии", href: "licenses.html" }
+      },
+      {
+        title: "Только лицензионные САПР и BIM",
+        text: "Модели и расчёты выполняются в лицензионном программном обеспечении, поэтому документация юридически чистая и корректная по нормативам.",
+        link: { label: "Наше программное обеспечение", href: "licenses.html#programs" }
+      },
+      {
+        title: "ИИ в проектировании",
+        text: "Генеративные планировки и автоматическая проверка решений на соответствие нормам ускоряют расчёт вариантов и снижают риск ошибок.",
+        link: { label: "Как мы используем ИИ", href: "specs.html#ai" }
+      }
+    ]
+  },
+
+  // "How we work": three steps with a line that draws itself on scroll.
+  process: {
+    eyebrow: "Как мы работаем",
+    title: "Три этапа до готового объекта",
+    steps: [
+      {
+        title: "Изыскания и задание",
+        text: "Выезжаем на площадку, проводим инженерные изыскания и вместе с вами формируем техническое задание."
+      },
+      {
+        title: "Проектирование",
+        text: "Разрабатываем архитектурный, конструктивный и инженерный разделы в BIM и готовим документацию к экспертизе."
+      },
+      {
+        title: "Строительство и сдача",
+        text: "Ведём строительство и авторский надзор, сдаём объект в эксплуатацию под ключ."
+      }
+    ]
+  },
+
+  // Final call to action before the contact form. Background video is muted,
+  // looped and dimmed; set video "" to use the poster image only.
+  finalCta: {
+    eyebrow: "Следующий объект",
+    titleLines: ["Расскажите о задаче,", "и мы предложим решение"],
+    text: "Ответим на заявку в течение двух рабочих дней.",
+    cta: { label: "Заказать проект", href: "#contact" },
+    video: "./assets/projects/bof-eurasia/render1.mp4",
+    poster: "./assets/projects/bof-eurasia/th.webp"
   },
 
   /* ---------------------------------------------------------------------------
