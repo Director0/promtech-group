@@ -107,19 +107,23 @@ window.SITE_CONFIG = {
   },
 
   /* ---------------------------------------------------------------------------
-     5) HERO 3D SCENE — a glass cube with a technical "build" process inside.
-        A wireframe structure draws itself floor-by-floor (tech drawing),
-        nodes light up, and data pulses travel through it (graph animation).
-        Framed on the RIGHT side of the hero, kept fully in view.
+     5) HERO 3D SCENE — «От изысканий до ключей».
+        A residential quarter is born the way every project is: survey points
+        spread over the site, drawing lines trace every floor, then the floors
+        are built one by one. The cursor cuts a section through the buildings
+        to show the structure inside; drag turns the quarter; click sends a
+        pulse through the ground; scrolling down explodes it floor by floor.
      ------------------------------------------------------------------------ */
   scene: {
     enabled: true,
-    autoRotate: true,    // the cube slowly turns
-    rotateSpeed: 0.10,   // turn speed
-    drawSeconds: 6,      // time for the wireframe to draw itself
-    holdSeconds: 2.2,    // pause once fully drawn, before it loops
-    pulses: 4,           // number of travelling data pulses
-    intensity: 1.0       // overall glow brightness (0.6 – 1.4)
+    autoRotate: true,      // the quarter slowly turns
+    rotateSpeed: 0.05,     // turn speed
+    cycleSeconds: 15,      // build → hold → back to the drawing, then again
+    explodeOnScroll: true, // floors separate while the hero scrolls away
+    seed: 2014,            // change to get a different layout of the quarter
+    // Stage labels shown next to the scene (they light up with the animation)
+    stages: ["Изыскания", "Проектирование", "Строительство"],
+    hint: "Наведите курсор, чтобы заглянуть в конструкцию. Потяните, чтобы повернуть квартал."
   },
 
   /* ---------------------------------------------------------------------------

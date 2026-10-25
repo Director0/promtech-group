@@ -81,6 +81,17 @@ function buildHero() {
       <div class="stat-value" data-count="${Number(s.value) || 0}">0<span class="text-gold">${esc(s.suffix || "")}</span></div>
       <div class="stat-label">${esc(s.label)}</div>
     </div>`).join("");
+
+  // stages of the 3D scene's cycle
+  const sc = C.scene || {};
+  const proc = $("#hero-process");
+  if (proc) {
+    if (sc.enabled === false || !(sc.stages || []).length) proc.hidden = true;
+    else proc.innerHTML =
+      `<ol>${sc.stages.map((s, i) => `
+        <li><span class="hp-num">${String(i + 1).padStart(2, "0")}</span><span class="hp-label">${esc(s)}</span><span class="hp-bar"></span></li>`).join("")}</ol>` +
+      (sc.hint ? `<p class="hero-process-hint">${esc(sc.hint)}</p>` : "");
+  }
 }
 
 /* ---------- ABOUT ---------- */
