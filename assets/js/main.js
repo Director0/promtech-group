@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   buildTagline();
   buildBenefits();
   buildProcess();
+  buildPartners();
   buildPortfolio();
   buildNews();
   buildFinalCta();
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initNavBehavior();
   initReveal();
+  initPartnersLight();
   initHeroIntro();
   initScrollSpy();
   initNewsModal();
@@ -189,6 +191,52 @@ function buildProcess() {
 }
 
 /* ---------- FINAL CTA ---------- */
+/* ---------- PARTNERS (mono at rest, own colours on hover) ---------- */
+function buildPartners() {
+  const p = C.partners || {};
+  const items = p.items || [];
+  if (!items.length) return hide("#partners");
+  $("#partners-eyebrow").textContent = p.eyebrow || "";
+  $("#partners-title").textContent = p.title || "";
+  $("#partners-text").textContent = p.text || "";
+  $("#partners-wall").innerHTML = items.map((it, i) => {
+    // absolute URL: a relative url() inside a custom property resolves against the stylesheet
+    const mono = new URL(it.mono || String(it.logo).replace(/\.png$/i, "-mono.png"), location.href).href;
+    const tag = it.href ? "a" : "div";
+    const link = it.href ? ` href="${esc(it.href)}" target="_blank" rel="noopener"` : "";
+    return `
+    <li class="partner" data-reveal data-reveal-delay="${(i % 6) % 4 + 1}">
+      <${tag} class="partner-tile"${link} title="${esc(it.name)}" tabindex="${it.href ? 0 : -1}">
+        <span class="partner-mono" style="--mask:url('${esc(mono)}')" aria-hidden="true"></span>
+        <img class="partner-color" src="${esc(it.logo)}" alt="${esc(it.name)}" loading="lazy" decoding="async">
+        <span class="partner-name">${esc(it.name)}</span>
+      </${tag}>
+    </li>`;
+  }).join("");
+}
+
+/* the cursor is a lamp: tiles near it brighten a little (--near 0..1) */
+function initPartnersLight() {
+  const wall = $("#partners-wall");
+  if (!wall || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const tiles = Array.from(wall.querySelectorAll(".partner-tile"));
+  let x = 0, y = 0, ticking = false;
+  const update = () => {
+    ticking = false;
+    tiles.forEach(t => {
+      const r = t.getBoundingClientRect();
+      const d = Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2));
+      const near = Math.max(0, 1 - d / (r.width * 1.6));
+      t.style.setProperty("--near", (near * near).toFixed(3));
+    });
+  };
+  wall.addEventListener("pointermove", e => {
+    x = e.clientX; y = e.clientY;
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  wall.addEventListener("pointerleave", () => tiles.forEach(t => t.style.setProperty("--near", "0")));
+}
+
 function buildFinalCta() {
   const f = C.finalCta || {};
   if (!f.cta) return hide("#final-cta");

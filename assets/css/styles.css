@@ -659,6 +659,65 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 /* =============================================================================
    PROCESS — three steps, connector line draws itself when steps reveal
    ========================================================================== */
+/* =============================================================================
+   PARTNERS — a ledger wall of logos. At rest every logo is printed in the
+   site's text colour (mask from "-mono.png"); on hover the tile turns into
+   light paper and the logo appears in its own colours. Tiles near the cursor
+   brighten a little (--near from main.js), like a lamp moving over the wall.
+   ========================================================================== */
+.partners-head { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; margin-bottom: 48px; }
+.partners-head .lead { max-width: 40ch; }
+.partners-wall {
+  --paper: #f4f1ea;
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px;
+  background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+}
+html[data-theme="light"] .partners-wall { --paper: #ffffff; }
+.partner { background: var(--bg); }
+.partner-tile {
+  position: relative; display: block; aspect-ratio: 3 / 2; outline: none;
+  background: color-mix(in srgb, var(--text) calc(var(--near, 0) * 5%), var(--bg));
+  transition: background-color var(--dur-micro) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.partner-mono { position: absolute; inset: 22% 16% 26%; }
+.partner-color { position: absolute; left: 16%; top: 22%; width: 68%; height: 52%; }
+.partner-mono {
+  background: color-mix(in srgb, var(--text) calc(var(--near, 0) * 100%), var(--muted));
+  -webkit-mask: var(--mask) center / contain no-repeat; mask: var(--mask) center / contain no-repeat;
+  opacity: calc(0.7 + var(--near, 0) * 0.3);
+  transition: opacity var(--dur-micro) var(--ease), transform var(--dur) var(--ease);
+}
+.partner-color {
+  object-fit: contain;
+  opacity: 0; transform: scale(0.94);
+  transition: opacity var(--dur-micro) var(--ease), transform var(--dur) var(--ease);
+}
+.partner-name {
+  position: absolute; left: 12px; right: 12px; bottom: 8px;
+  font-size: 12px; line-height: 16px; font-weight: 600; color: #2b2e33; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity var(--dur-micro) var(--ease), transform var(--dur) var(--ease);
+}
+.partner-tile:hover, .partner-tile:focus-visible {
+  background: var(--paper); z-index: 1; transform: scale(1.03);
+  box-shadow: 0 24px 48px -24px var(--shadow);
+}
+.partner-tile:hover .partner-mono, .partner-tile:focus-visible .partner-mono { opacity: 0; transform: scale(1.04); }
+.partner-tile:hover .partner-color, .partner-tile:focus-visible .partner-color { opacity: 1; transform: none; }
+.partner-tile:hover .partner-name, .partner-tile:focus-visible .partner-name { opacity: 1; transform: none; }
+.partner-tile:focus-visible { box-shadow: inset 0 0 0 2px var(--gold), 0 24px 48px -24px var(--shadow); }
+@media (max-width: 960px) { .partners-wall { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 640px) { .partners-wall { grid-template-columns: repeat(3, 1fr); } .partner-mono { inset: 20% 12% 22%; } .partner-color { left: 12%; top: 20%; width: 76%; height: 58%; } }
+@media (max-width: 420px) { .partners-wall { grid-template-columns: repeat(2, 1fr); } }
+/* touch screens have no hover: show the logos in colour on paper right away */
+@media (hover: none) {
+  .partner-tile { background: var(--paper); }
+  .partner-mono { opacity: 0; }
+  .partner-color { opacity: 1; transform: none; }
+}
+
 #process .section-title { max-width: 680px; }
 .process-steps {
   list-style: none; margin: 64px 0 0; padding: 0; position: relative;

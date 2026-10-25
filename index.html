@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=37" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=38" />
   <!-- keep hero hidden until intro plays, but only when JS is available -->
   <script>document.documentElement.classList.add("preload");</script>
 </head>
@@ -104,6 +104,20 @@
       <p class="eyebrow" id="process-eyebrow" data-reveal></p>
       <h2 class="section-title" id="process-title" data-reveal data-reveal-delay="1"></h2>
       <ol class="process-steps" id="process-steps"></ol>
+    </div>
+  </section>
+
+  <!-- ================= PARTNERS ================= -->
+  <section class="section" id="partners">
+    <div class="container">
+      <div class="partners-head">
+        <div>
+          <p class="eyebrow" id="partners-eyebrow" data-reveal></p>
+          <h2 class="section-title" id="partners-title" data-reveal data-reveal-delay="1"></h2>
+        </div>
+        <p class="lead" id="partners-text" data-reveal data-reveal-delay="2"></p>
+      </div>
+      <ul class="partners-wall" id="partners-wall"></ul>
     </div>
   </section>
 
@@ -237,7 +251,7 @@
 
   <!-- ================= SCRIPTS ================= -->
   <!-- 1) config + theme load first (plain scripts, set globals) -->
-  <script src="assets/js/config.js?v=23"></script>
+  <script src="assets/js/config.js?v=24"></script>
   <script src="assets/js/theme.js?v=6"></script>
   <script src="assets/js/placeholder.js?v=2"></script>
   <script src="assets/js/cursor.js?v=1"></script>
@@ -255,7 +269,7 @@
   }
   </script>
   <!-- 4) page logic + 3D scene (ES modules, deferred automatically) -->
-  <script type="module" src="assets/js/main.js?v=23"></script>
+  <script type="module" src="assets/js/main.js?v=25"></script>
   <script type="module" src="assets/js/scene.js?v=19"></script>
 </body>
 </html>

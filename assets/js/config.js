@@ -249,6 +249,39 @@ window.SITE_CONFIG = {
     ]
   },
 
+  // Partners and clients: a wall of logos under "Как мы работаем".
+  // At rest every logo is printed in the site's text colour; on hover the tile
+  // turns into light paper and the logo shows its own colours.
+  //   logo  — the colour logo (transparent PNG)
+  //   mono  — optional single-colour mask; defaults to "<logo>-mono.png"
+  //   href  — optional link to the partner's site
+  // Names marked "уточнить" were not readable from the logo sheet — please fill in.
+  partners: {
+    eyebrow: "Нам доверяют",
+    title: "Партнёры и заказчики",
+    text: "Компании и организации, с которыми мы работали и работаем.",
+    items: [
+      { name: "Газпромбанк",               logo: "assets/partners/partner-01.png" },
+      { name: "Сельский дом",              logo: "assets/partners/partner-02.png" },
+      { name: "Строительное управление 56", logo: "assets/partners/partner-03.png" },
+      { name: "Результат",                 logo: "assets/partners/partner-04.png" },
+      { name: "Лист",                      logo: "assets/partners/partner-05.png" },
+      { name: "Scania",                    logo: "assets/partners/partner-06.png" },
+      { name: "Газпром Транс",             logo: "assets/partners/partner-07.png" },
+      { name: "Газпром переработка",       logo: "assets/partners/partner-08.png" },
+      { name: "Газпром газобезопасность",  logo: "assets/partners/partner-09.png" },
+      { name: "Лукойл",                    logo: "assets/partners/partner-10.png" },
+      { name: "Партнёр (уточнить)",        logo: "assets/partners/partner-11.png" },
+      { name: "Центр прогресса бокса",     logo: "assets/partners/partner-12.png" },
+      { name: "Орен-Орс",                  logo: "assets/partners/partner-13.png" },
+      { name: "Опора",                     logo: "assets/partners/partner-14.png" },
+      { name: "OSG",                       logo: "assets/partners/partner-15.png" },
+      { name: "УПСК Жилстрой",             logo: "assets/partners/partner-16.png" },
+      { name: "Гранд Парк",                logo: "assets/partners/partner-17.png" },
+      { name: "Муниципальный заказчик (уточнить)", logo: "assets/partners/partner-18.png" }
+    ]
+  },
+
   // Final call to action before the contact form. Background video is muted,
   // looped and dimmed; set video "" to use the poster image only.
   finalCta: {
