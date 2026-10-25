@@ -79,8 +79,13 @@ function renderHero(p) {
     ? `<video id="hero-video" autoplay muted loop playsinline ${p.heroPoster ? `poster="${esc(p.heroPoster)}"` : ""}>
          <source src="${esc(p.heroSrc)}" type="video/mp4">
        </video>`
-    : `<img src="${esc(p.heroSrc || p.thumb)}" alt="${esc(p.title)}"
-            data-ph="${esc(p.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)" />`;
+    : `<img class="hero-main" src="${esc(p.heroSrc || p.thumb)}" alt="${esc(p.title)}"
+            data-ph="${esc(p.title)}" onload="this.classList.add('is-loaded')"
+            onerror="window.PH&&PH.set(this,this.dataset.ph)" />`;
+  // the card photo (already cached from the home page) sits under the full
+  // hero image, so the card → hero morph lands on a picture, never on a gap
+  const placeholder = p.thumb && p.heroType !== "video"
+    ? `<img class="hero-ph" src="${esc(p.thumb)}" alt="" aria-hidden="true" />` : "";
 
   const meta = [
     p.category && `<span><b>${esc(p.category)}</b></span>`,
@@ -90,7 +95,7 @@ function renderHero(p) {
   ].filter(Boolean).join("");
 
   $("#project-hero").innerHTML = `
-    ${media}
+    <div class="project-hero-media">${placeholder}${media}</div>
     <div class="project-hero-scrim"></div>
     <div class="project-hero-content">
       <div class="container">

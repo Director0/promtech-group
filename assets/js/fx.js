@@ -326,9 +326,83 @@
     words.forEach(function (w) { io.observe(w); });
   }
 
+  /* ---------- page transitions ----------
+     Browsers with cross-document View Transitions animate every navigation
+     (styles.css): the old page drifts up and blurs out, the new one rises in,
+     the nav stays put. Going from a project card to its page, the card's photo
+     grows into the project's hero (shared name "project-media"); going back,
+     it shrinks into its card again. Other browsers get a soft fade. */
+  var MEDIA = "project-media";
+  var hasVT = "CSSViewTransitionRule" in window;
+
+  function projectIdOf(url) {
+    try {
+      var u = new URL(url, location.href);
+      return /project\.html$/.test(u.pathname) ? u.searchParams.get("id") : null;
+    } catch (e) { return null; }
+  }
+  function cardImg(id) {
+    var card = document.querySelector('.card[href="project.html?id=' + encodeURIComponent(id) + '"]');
+    // only a face-up card in the centre of the fan can morph
+    return card && card.classList.contains("is-active") ? card.querySelector(".card-img") : null;
+  }
+  function clearCardNames() {
+    document.querySelectorAll(".card-img").forEach(function (i) { i.style.viewTransitionName = ""; });
+  }
+
+  // the nav keeps its place during a transition (named only while it runs)
+  function holdNav(vt) {
+    var nav = document.getElementById("nav");
+    if (!nav || !vt) return;
+    nav.style.viewTransitionName = "site-nav";
+    vt.finished.finally(function () { nav.style.viewTransitionName = ""; });
+  }
+
+  // leaving this page: name the clicked card's photo
+  window.addEventListener("pageswap", function (e) {
+    clearCardNames();
+    if (!e.viewTransition) return;
+    holdNav(e.viewTransition);
+    if (!e.activation || !e.activation.entry) return;
+    var id = projectIdOf(e.activation.entry.url);
+    var img = id && cardImg(id);
+    if (img) img.style.viewTransitionName = MEDIA;
+  });
+  // arriving back from a project: its card receives the photo
+  window.addEventListener("pagereveal", function (e) {
+    if (!e.viewTransition) return;
+    holdNav(e.viewTransition);
+    var act = window.navigation && window.navigation.activation;
+    var id = act && act.from && projectIdOf(act.from.url);
+    var img = id && cardImg(id);
+    if (!img) return;
+    img.style.viewTransitionName = MEDIA;
+    e.viewTransition.finished.finally(function () { img.style.viewTransitionName = ""; });
+  });
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) { clearCardNames(); document.documentElement.classList.remove("pt-leaving"); }
+  });
+
+  // fallback: fade the page out before following an internal link
+  function initFallbackTransitions() {
+    if (hasVT || reduce) return;
+    document.documentElement.classList.add("pt-novt");
+    document.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
+      var url = new URL(a.getAttribute("href"), location.href);
+      if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname && url.search === location.search) return;   // same page (anchors)
+      e.preventDefault();
+      document.documentElement.classList.add("pt-leaving");
+      setTimeout(function () { location.href = url.href; }, 280);
+    });
+  }
+
   window.FX = { initDeck: initDeck, refreshDeck: refreshDeck, initTagline: initTagline };
 
-  function boot() { initLenis(); initAnchors(); initGrain(); initSpotlight(); }
+  function boot() { initLenis(); initAnchors(); initGrain(); initSpotlight(); initFallbackTransitions(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 })();

@@ -1093,6 +1093,10 @@ html[data-theme="light"] .final-cta-media::after { background: rgba(255, 255, 25
    ========================================================================== */
 .project-hero { position: relative; height: 78dvh; min-height: 560px; max-height: 880px; overflow: hidden; }
 .project-hero img, .project-hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* the hero photo is the target of the card → page morph (see PAGE TRANSITIONS) */
+.project-hero-media { position: absolute; inset: 0; view-transition-name: project-media; }
+.project-hero .hero-main { opacity: 0; transition: opacity var(--dur) var(--ease); }
+.project-hero .hero-main.is-loaded { opacity: 1; }
 .project-hero-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); }
 .project-hero-content { position: absolute; inset: auto 0 0 0; z-index: 2; }
 .project-hero .eyebrow { color: var(--gold-soft); }
@@ -1369,3 +1373,30 @@ html[data-theme="light"] .services-list li { color: var(--gold); }
 /* Footer bottom: keep the privacy link inline with the other meta */
 .footer-bottom a { color: inherit; transition: color var(--dur-micro) var(--ease); }
 .footer-bottom a:hover { color: var(--gold); }
+
+/* =============================================================================
+   PAGE TRANSITIONS
+   Cross-document View Transitions: the old page drifts up and blurs out, the
+   new one rises in; the nav stays in place; a project card's photo morphs into
+   the project page hero (fx.js names it "project-media"). Browsers without
+   support get a soft fade (html.pt-novt / .pt-leaving set by fx.js).
+   ========================================================================== */
+@view-transition { navigation: auto; }
+/* the nav gets view-transition-name only during a transition (fx.js): a permanent
+   name would make it a backdrop root and break its glass blur */
+::view-transition-old(root) { animation: pt-out 420ms var(--ease) both; }
+::view-transition-new(root) { animation: pt-in 800ms var(--ease) 120ms both; }
+::view-transition-group(project-media) { animation-duration: 900ms; animation-timing-function: var(--ease); }
+::view-transition-old(project-media),
+::view-transition-new(project-media) { width: 100%; height: 100%; object-fit: cover; animation-duration: 900ms; animation-timing-function: var(--ease); }
+::view-transition-group(site-nav) { animation-duration: 600ms; animation-timing-function: var(--ease); }
+@keyframes pt-out { to { opacity: 0; transform: translateY(-32px) scale(0.985); filter: blur(8px); } }
+@keyframes pt-in { from { opacity: 0; transform: translateY(48px); filter: blur(10px); } }
+
+html.pt-novt body { animation: pt-fade-in 700ms var(--ease) both; }
+html.pt-leaving body { opacity: 0; transform: translateY(-16px); transition: opacity 260ms var(--ease), transform 260ms var(--ease); }
+@keyframes pt-fade-in { from { opacity: 0; transform: translateY(24px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
