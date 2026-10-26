@@ -26,9 +26,43 @@
   var rx = mx, ry = my;                                        // ring (lagged)
   var ready = false;
 
+  // carry the pointer position across page transitions, so the cursor is
+  // already in place on the new page instead of waiting for the next move
+  var KEY = "pt-cursor-pos";
+  function place() {
+    dot.style.transform = "translate(" + mx + "px," + my + "px) translate(-50%,-50%)";
+    ring.style.transform = "translate(" + rx + "px," + ry + "px) translate(-50%,-50%)";
+  }
+  try {
+    var saved = JSON.parse(sessionStorage.getItem(KEY) || "null");
+    if (saved && Date.now() - saved.t < 5000) {
+      mx = rx = saved.x; my = ry = saved.y; ready = true;
+      ring.classList.add("ready"); dot.classList.add("ready"); place();
+    }
+  } catch (e) {}
+  function save() {
+    if (!ready) return;
+    try { sessionStorage.setItem(KEY, JSON.stringify({ x: mx, y: my, t: Date.now() })); } catch (e) {}
+  }
+  // during a page transition the cursor keeps its place instead of drifting
+  // away with the old page (named only while the transition runs)
+  function hold(vt) {
+    if (!vt) return;
+    ring.style.viewTransitionName = "pt-cursor-ring"; dot.style.viewTransitionName = "pt-cursor-dot";
+    vt.finished.finally(function () { ring.style.viewTransitionName = ""; dot.style.viewTransitionName = ""; });
+  }
+  window.addEventListener("pageswap", function (e) { save(); hold(e.viewTransition); });
+  window.addEventListener("pagereveal", function (e) { hold(e.viewTransition); });
+  window.addEventListener("pagehide", save);
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) { ring.classList.remove("hidden"); dot.classList.remove("hidden"); }
+  });
+
   window.addEventListener("mousemove", function (e) {
     mx = e.clientX; my = e.clientY;
     if (!ready) { ready = true; rx = mx; ry = my; ring.classList.add("ready"); dot.classList.add("ready"); }
+    // the pointer is evidently inside the page: never stay hidden
+    ring.classList.remove("hidden"); dot.classList.remove("hidden");
     dot.style.transform = "translate(" + mx + "px," + my + "px) translate(-50%,-50%)";
 
     var t = e.target;
@@ -41,8 +75,11 @@
 
   window.addEventListener("mousedown", function () { ring.classList.add("is-down"); }, { passive: true });
   window.addEventListener("mouseup", function () { ring.classList.remove("is-down"); }, { passive: true });
-  document.addEventListener("mouseleave", function () { ring.classList.add("hidden"); dot.classList.add("hidden"); });
-  document.addEventListener("mouseenter", function () { ring.classList.remove("hidden"); dot.classList.remove("hidden"); });
+  // leaving the window hides the cursor; it comes back on the next move
+  document.documentElement.addEventListener("mouseleave", function (e) {
+    if (e.relatedTarget) return;
+    ring.classList.add("hidden"); dot.classList.add("hidden");
+  });
 
   function loop() {
     var k = reduce ? 1 : 0.2;

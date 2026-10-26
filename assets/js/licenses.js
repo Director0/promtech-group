@@ -38,7 +38,7 @@ function buildPrograms(pr) {
   $("#programs-title").textContent = pr.title || "";
   $("#programs-desc").innerHTML = (pr.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join("");
   $("#programs-gallery").innerHTML = (pr.gallery || []).map(src =>
-    `<img src="${esc(src)}" alt="${esc(pr.title || "")}" loading="lazy" decoding="async" data-zoom
+    `<img src="${esc(window.optImg ? optImg(src, "hero") : src)}" data-full="${esc(src)}" alt="${esc(pr.title || "")}" loading="lazy" decoding="async" data-zoom
           data-ph="${esc(pr.title || "Программа")}" onerror="window.PH&&PH.set(this,this.dataset.ph)">`
   ).join("");
 }

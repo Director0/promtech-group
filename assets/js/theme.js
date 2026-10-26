@@ -11,7 +11,7 @@
   var light = cfg.theme.light || {};
   var KEY = "pt-theme";
   // text color that sits on top of the accent (button) color
-  var ON_ACCENT = { dark: "#1a1304", light: "#FFFFFF" };
+  var ON_ACCENT = { dark: "#131209", light: "#FFFFFF" };
 
   function colorsFor(mode) {
     return mode === "light" ? Object.assign({}, dark, light) : dark;

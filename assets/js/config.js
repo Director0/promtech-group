@@ -23,16 +23,18 @@ window.SITE_CONFIG = {
         These are injected as CSS variables, so every section updates at once.
      ------------------------------------------------------------------------ */
   theme: {
+    // DARK THEME — flat neutral black surfaces + a single gold accent
+    // (redesign: no tinted navy surfaces, no background gradients).
     colors: {
-      bg:        "#04060C", // page background (rich black)
-      bgElevated:"#0A1530", // cards / elevated surfaces (deep navy)
-      navy:      "#0D2150", // ← MAIN BRAND COLOR (rich royal navy)
-      navyLight: "#1B3F86", // electric deep-blue for gradients / glow / accents
-      gold:      "#D4A95C", // ← ACCENT (warm rich gold)
-      goldSoft:  "#F1D7A0", // light champagne gold for glows / highlights
-      text:      "#EDF2FA", // primary text
-      muted:     "#97AAC6", // secondary text (bluish to match navy)
-      line:      "rgba(212,169,92,0.20)" // hairline borders
+      bg:        "#000000", // page background (flat black)
+      bgElevated:"#181818", // cards / elevated surfaces
+      navy:      "#0D2150", // brand navy (logo + 3D scene tint only)
+      navyLight: "#1B3F86",
+      gold:      "#D4A95C", // ← THE ONE ACCENT (buttons, highlights)
+      goldSoft:  "#F1D7A0", // accent hover
+      text:      "#F5F5F5", // primary text
+      muted:     "#9B9B9B", // secondary text (neutral gray)
+      line:      "rgba(255,255,255,0.10)" // hairline borders (neutral)
     },
 
     // LIGHT THEME — overrides applied when the user flips the toggle.
@@ -51,8 +53,10 @@ window.SITE_CONFIG = {
     fonts: {
       // Loaded from Google Fonts in the HTML <head>.
       // To use different fonts: change these AND the <link> in index.html / project.html.
-      display: "'Fraunces', serif",   // headings — modern editorial serif
-      body:    "'Manrope', sans-serif" // everything else — clean premium sans
+      // One typeface for the whole site (redesign). Headings use heavier weights
+      // and tighter tracking of the same family.
+      display: "'Manrope', sans-serif",
+      body:    "'Manrope', sans-serif"
     }
   },
 
@@ -103,19 +107,33 @@ window.SITE_CONFIG = {
   },
 
   /* ---------------------------------------------------------------------------
-     5) HERO 3D SCENE — a glass cube with a technical "build" process inside.
-        A wireframe structure draws itself floor-by-floor (tech drawing),
-        nodes light up, and data pulses travel through it (graph animation).
-        Framed on the RIGHT side of the hero, kept fully in view.
+     5) HERO 3D SCENE — «Квартал живёт».
+        A living residential quarter: cars follow each other and stop at the
+        traffic light while people cross, a bus serves its stop, a truck brings
+        modules and the tower crane builds a new house floor by floor (it is
+        handed over, lights up, and the next project begins). Day turns to
+        night. Hovering a house shows one of the projects below (click opens
+        it); drag turns the quarter. City sound is off until the visitor turns
+        it on.
      ------------------------------------------------------------------------ */
   scene: {
     enabled: true,
-    autoRotate: true,    // the cube slowly turns
-    rotateSpeed: 0.10,   // turn speed
-    drawSeconds: 6,      // time for the wireframe to draw itself
-    holdSeconds: 2.2,    // pause once fully drawn, before it loops
-    pulses: 4,           // number of travelling data pulses
-    intensity: 1.0       // overall glow brightness (0.6 – 1.4)
+    dayCycleSeconds: 90,                 // a full day (24 h) in seconds
+    startHour: { dark: 18.6, light: 11 }, // time of day when the page opens, per theme (also sets the hero colours)
+    traffic: 1,                          // 0.4 … 1.6: amount of traffic
+    autoOrbit: true,                     // the camera slowly circles the quarter
+    seed: 2014,
+    phases: ["Ночь", "Утро", "День", "Вечер"],
+    siteLabel: "Строится сейчас",        // label of the construction site on hover
+    soundLabel: "Звук",
+    hint: "Наведите на дом, чтобы узнать проект. Потяните, чтобы повернуть квартал.",
+    // captions pinned above the construction site ({n} and {max} are replaced)
+    captions: {
+      delivery: "Модули прибыли на площадку",
+      floor: "Смонтирован этаж {n} из {max}",
+      done: "Дом сдан. В окнах загорается свет",
+      next: "Следующий проект начинается с чертежа"
+    }
   },
 
   /* ---------------------------------------------------------------------------
@@ -145,7 +163,134 @@ window.SITE_CONFIG = {
       { label: "Лицензии",     href: "licenses.html", style: "primary" },
       { label: "Деятельность", href: "specs.html",    style: "ghost" }
     ],
-    image: "./assets/models/hq.png"
+    image: "./assets/models/hq.png",
+    // Floating badge that overlaps the About image (leave value "" to hide).
+    badge: { value: "2014", label: "год основания компании" }
+  },
+
+  /* ---------------------------------------------------------------------------
+     6a) REDESIGN BLOCKS (home page). Each block hides itself when left empty.
+     ------------------------------------------------------------------------ */
+
+  // Running line right under the hero: areas of work. Loops endlessly,
+  // pauses on hover. Add or remove phrases freely.
+  marquee: [
+    "Инженерные изыскания",
+    "Архитектурное проектирование",
+    "Конструктивные решения",
+    "Инженерные сети",
+    "BIM моделирование",
+    "Сопровождение экспертизы",
+    "Строительство",
+    "Сдача под ключ"
+  ],
+
+  // Large tagline that lights up word by word while scrolling.
+  // Each string is one line; break lines where the thought breaks.
+  tagline: {
+    lines: [
+      "Двенадцать лет мы превращаем",
+      "сложные инженерные задачи в здания,",
+      "где людям хорошо жить и работать."
+    ]
+  },
+
+  // Benefits: sticky heading + proof numbers (left), benefit list (right).
+  benefits: {
+    eyebrow: "Почему мы",
+    title: "Отвечаем за проект от первой скважины до ключей",
+    // Proof numbers shown under the heading.
+    proof: [
+      { value: "142", label: "объекта в эксплуатации" },
+      { value: "38",  label: "городов присутствия" },
+      { value: "60+", label: "специалистов в штате" }
+    ],
+    items: [
+      {
+        title: "Полный цикл в одних руках",
+        text: "Изыскания, проект, строительство и сдачу ведёт одна команда. Решения не теряются между подрядчиками, а сроки не расходятся по разным договорам.",
+        link: { label: "Деятельность компании", href: "specs.html" }
+      },
+      {
+        title: "Допуски на все виды работ",
+        text: "Свидетельства СРО на проектирование и строительство, лицензия МЧС и допуск к особо опасным объектам. Документы открыты для проверки.",
+        link: { label: "Смотреть лицензии", href: "licenses.html" }
+      },
+      {
+        title: "Только лицензионные САПР и BIM",
+        text: "Модели и расчёты выполняются в лицензионном программном обеспечении, поэтому документация юридически чистая и корректная по нормативам.",
+        link: { label: "Наше программное обеспечение", href: "licenses.html#programs" }
+      },
+      {
+        title: "ИИ в проектировании",
+        text: "Генеративные планировки и автоматическая проверка решений на соответствие нормам ускоряют расчёт вариантов и снижают риск ошибок.",
+        link: { label: "Как мы используем ИИ", href: "specs.html#ai" }
+      }
+    ]
+  },
+
+  // "How we work": three steps with a line that draws itself on scroll.
+  process: {
+    eyebrow: "Как мы работаем",
+    title: "Три этапа до готового объекта",
+    steps: [
+      {
+        title: "Изыскания и задание",
+        text: "Выезжаем на площадку, проводим инженерные изыскания и вместе с вами формируем техническое задание."
+      },
+      {
+        title: "Проектирование",
+        text: "Разрабатываем архитектурный, конструктивный и инженерный разделы в BIM и готовим документацию к экспертизе."
+      },
+      {
+        title: "Строительство и сдача",
+        text: "Ведём строительство и авторский надзор, сдаём объект в эксплуатацию под ключ."
+      }
+    ]
+  },
+
+  // Partners and clients: a wall of logos under "Как мы работаем".
+  // At rest every logo is printed in the site's text colour; on hover the tile
+  // turns into light paper and the logo shows its own colours.
+  //   logo  — the colour logo (transparent PNG)
+  //   mono  — optional single-colour mask; defaults to "<logo>-mono.png"
+  //   href  — optional link to the partner's site
+  // Names marked "уточнить" were not readable from the logo sheet — please fill in.
+  partners: {
+    eyebrow: "Нам доверяют",
+    title: "Партнёры и заказчики",
+    text: "Компании и организации, с которыми мы работали и работаем.",
+    items: [
+      { name: "Газпромбанк",               logo: "assets/partners/partner-01.png" },
+      { name: "Сельский дом",              logo: "assets/partners/partner-02.png" },
+      { name: "Строительное управление 56", logo: "assets/partners/partner-03.png" },
+      { name: "Результат",                 logo: "assets/partners/partner-04.png" },
+      { name: "Лист",                      logo: "assets/partners/partner-05.png" },
+      { name: "Scania",                    logo: "assets/partners/partner-06.png" },
+      { name: "Газпром Транс",             logo: "assets/partners/partner-07.png" },
+      { name: "Газпром переработка",       logo: "assets/partners/partner-08.png" },
+      { name: "Газпром газобезопасность",  logo: "assets/partners/partner-09.png" },
+      { name: "Лукойл",                    logo: "assets/partners/partner-10.png" },
+      { name: "Партнёр (уточнить)",        logo: "assets/partners/partner-11.png" },
+      { name: "Центр прогресса бокса",     logo: "assets/partners/partner-12.png" },
+      { name: "Орен-Орс",                  logo: "assets/partners/partner-13.png" },
+      { name: "Опора",                     logo: "assets/partners/partner-14.png" },
+      { name: "OSG",                       logo: "assets/partners/partner-15.png" },
+      { name: "УПСК Жилстрой",             logo: "assets/partners/partner-16.png" },
+      { name: "Гранд Парк",                logo: "assets/partners/partner-17.png" },
+      { name: "Муниципальный заказчик (уточнить)", logo: "assets/partners/partner-18.png" }
+    ]
+  },
+
+  // Final call to action before the contact form. Background video is muted,
+  // looped and dimmed; set video "" to use the poster image only.
+  finalCta: {
+    eyebrow: "Следующий объект",
+    titleLines: ["Расскажите о задаче,", "и мы предложим решение"],
+    text: "Ответим на заявку в течение двух рабочих дней.",
+    cta: { label: "Заказать проект", href: "#contact" },
+    video: "./assets/projects/bof-eurasia/render1.mp4",
+    poster: "./assets/projects/bof-eurasia/th.webp"
   },
 
   /* ---------------------------------------------------------------------------

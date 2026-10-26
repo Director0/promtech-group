@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" class="preload">
+<html lang="ru" class="preload">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Промтех Групп. Инжиниринг и проектирование любой сложности. По всей России." />
-  <meta name="theme-color" content="#05080F" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <meta property="og:title" content="Промтех Групп" />
+  <meta property="og:description" content="Инжиниринг и проектирование любой сложности. По всей России." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/projects/bof-eurasia/th.webp" />
   <title>Промтех Групп</title>
 
-  <!-- Fonts: Cinzel (display) + Josefin Sans (body) -->
+  <!-- Font: Manrope only (one typeface for the whole site) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=19" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=42" />
   <!-- keep hero hidden until intro plays, but only when JS is available -->
   <script>document.documentElement.classList.add("preload");</script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
 
   <!-- ================= NAV ================= -->
   <header class="nav" id="nav">
@@ -33,6 +39,8 @@
     </div>
   </header>
 
+  <main id="main">
+
   <!-- ================= HERO ================= -->
   <section class="hero" id="home">
     <canvas id="scene-canvas" aria-hidden="true"></canvas>
@@ -46,7 +54,15 @@
         <div class="hero-stats" id="hero-stats"></div>
       </div>
     </div>
+    <!-- live panel of the 3D quarter (clock + sound), label of the hovered house,
+         caption pinned above the construction site — all driven by scene.js -->
+    <div class="hero-process" id="hero-process"></div>
+    <a class="scene-label" id="scene-label" hidden></a>
+    <p class="scene-caption" id="scene-caption" aria-live="polite"></p>
   </section>
+
+  <!-- ================= MARQUEE (areas of work) ================= -->
+  <div class="marquee" id="marquee" aria-label="Направления работ"></div>
 
   <!-- ================= ABOUT ================= -->
   <section class="section" id="about">
@@ -58,22 +74,83 @@
       </div>
       <div class="about-media" data-reveal data-reveal-delay="1">
         <img id="about-image" alt="A Meridian Build project" loading="lazy" decoding="async" />
+        <div class="about-badge" id="about-badge" hidden></div>
       </div>
     </div>
   </section>
 
+  <!-- ================= TAGLINE (words light up on scroll) ================= -->
+  <section class="section tagline" id="tagline" aria-label="Наш принцип">
+    <div class="container">
+      <p class="tagline-text" id="tagline-text"></p>
+    </div>
+  </section>
+
+  <!-- ================= BENEFITS ================= -->
+  <section class="section" id="benefits">
+    <div class="container benefits-grid">
+      <div class="benefits-head">
+        <p class="eyebrow" id="benefits-eyebrow" data-reveal></p>
+        <h2 class="section-title" id="benefits-title" data-reveal data-reveal-delay="1"></h2>
+        <div class="benefits-proof" id="benefits-proof" data-reveal data-reveal-delay="2"></div>
+      </div>
+      <ol class="benefits-list" id="benefits-list"></ol>
+    </div>
+  </section>
+
+  <!-- ================= PROCESS ================= -->
+  <section class="section" id="process">
+    <div class="container">
+      <p class="eyebrow" id="process-eyebrow" data-reveal></p>
+      <h2 class="section-title" id="process-title" data-reveal data-reveal-delay="1"></h2>
+      <ol class="process-steps" id="process-steps"></ol>
+    </div>
+  </section>
+
+  <!-- ================= PARTNERS ================= -->
+  <section class="section" id="partners">
+    <div class="container">
+      <div class="partners-head">
+        <div>
+          <p class="eyebrow" id="partners-eyebrow" data-reveal></p>
+          <h2 class="section-title" id="partners-title" data-reveal data-reveal-delay="1"></h2>
+        </div>
+        <p class="lead" id="partners-text" data-reveal data-reveal-delay="2"></p>
+      </div>
+      <ul class="partners-wall" id="partners-wall"></ul>
+    </div>
+  </section>
+
   <!-- ================= PORTFOLIO ================= -->
-  <section class="section" id="portfolio">
+  <section class="section portfolio" id="portfolio">
     <div class="container">
       <div class="portfolio-head">
         <div>
           <p class="eyebrow" id="portfolio-eyebrow" data-reveal></p>
           <h2 class="section-title" id="portfolio-title" data-reveal data-reveal-delay="1"></h2>
-          <p class="lead" id="portfolio-subtitle" data-reveal data-reveal-delay="2" style="margin-top:14px"></p>
+          <p class="lead" id="portfolio-subtitle" data-reveal data-reveal-delay="2"></p>
         </div>
-        <div class="filters" id="filters" data-reveal data-reveal-delay="2"></div>
       </div>
-      <div class="projects-grid" id="projects-grid"></div>
+    </div>
+    <!-- card deck: pinned while the fan of project cards turns with the scroll (fx.js) -->
+    <div class="deck" id="deck">
+      <div class="deck-stage">
+        <div class="container deck-bar">
+          <div class="filters" id="filters"></div>
+          <p class="deck-count" aria-live="polite"><b id="deck-cur">01</b> / <span id="deck-total">01</span></p>
+        </div>
+        <div class="deck-fan" id="projects-grid"></div>
+        <div class="container deck-foot">
+          <button class="deck-nav" id="deck-prev" type="button" aria-label="Предыдущий проект">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="deck-progress" aria-hidden="true"><span id="deck-bar"></span></div>
+          <button class="deck-nav" id="deck-next" type="button" aria-label="Следующий проект">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <p class="deck-hint" id="deck-hint">Листайте, чтобы перебрать колоду</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -83,14 +160,14 @@
       <div class="news-head">
         <p class="eyebrow" id="news-eyebrow" data-reveal></p>
         <h2 class="section-title" id="news-title" data-reveal data-reveal-delay="1"></h2>
-        <p class="lead" id="news-subtitle" data-reveal data-reveal-delay="2" style="margin-top:14px"></p>
+        <p class="lead" id="news-subtitle" data-reveal data-reveal-delay="2"></p>
       </div>
       <div class="news-grid" id="news-grid"></div>
     </div>
   </section>
 
   <!-- News modal (opens over a blurred page) -->
-  <div class="news-modal" id="news-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="news-modal-title">
+  <div class="news-modal" id="news-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="news-modal-title" data-lenis-prevent>
     <div class="news-modal-panel" role="document">
       <button class="news-modal-close" id="news-modal-close" aria-label="Закрыть">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -104,37 +181,55 @@
     </div>
   </div>
 
+  <!-- ================= FINAL CTA ================= -->
+  <section class="final-cta" id="final-cta">
+    <div class="final-cta-media" aria-hidden="true">
+      <video id="final-cta-video" muted loop playsinline preload="none"></video>
+    </div>
+    <div class="container final-cta-inner">
+      <p class="eyebrow" id="final-cta-eyebrow" data-reveal></p>
+      <h2 class="final-cta-title" id="final-cta-title" data-reveal data-reveal-delay="1"></h2>
+      <p class="lead" id="final-cta-text" data-reveal data-reveal-delay="2"></p>
+      <div class="final-cta-actions" id="final-cta-actions" data-reveal data-reveal-delay="3"></div>
+    </div>
+  </section>
+
   <!-- ================= CONTACT ================= -->
   <section class="section" id="contact">
     <div class="container contact-grid">
       <div class="contact-info">
         <p class="eyebrow" id="contact-eyebrow" data-reveal></p>
         <h2 class="section-title" id="contact-title" data-reveal data-reveal-delay="1"></h2>
-        <p id="contact-text" data-reveal data-reveal-delay="1" style="margin-top:18px"></p>
+        <p id="contact-text" data-reveal data-reveal-delay="1"></p>
         <ul class="contact-list" id="contact-list" data-reveal data-reveal-delay="2"></ul>
       </div>
-      <form class="form" id="contact-form" data-reveal data-reveal-delay="2">
+      <form class="form" id="contact-form" data-reveal data-reveal-delay="2" novalidate>
         <div class="field">
           <label for="f-name">Ваше имя</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required />
+          <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="f-name-err" />
+          <p class="field-error" id="f-name-err" aria-live="polite"></p>
         </div>
         <div class="field">
           <label for="f-email">Email</label>
-          <input id="f-email" name="email" type="email" autocomplete="email" required />
+          <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-err" />
+          <p class="field-error" id="f-email-err" aria-live="polite"></p>
         </div>
         <div class="field">
           <label for="f-msg">О проекте</label>
-          <textarea id="f-msg" name="message" required placeholder="Site location, type of build, rough timeline…"></textarea>
+          <textarea id="f-msg" name="message" required placeholder="Site location, type of build, rough timeline…" aria-describedby="f-msg-err"></textarea>
+          <p class="field-error" id="f-msg-err" aria-live="polite"></p>
         </div>
         <label class="field-consent" id="consent-field">
           <input type="checkbox" id="f-consent" name="consent" required />
           <span id="consent-text"></span>
         </label>
-        <button class="btn btn-primary" type="submit" id="contact-submit" style="justify-content:center" disabled>Отправить</button>
+        <button class="btn btn-primary" type="submit" id="contact-submit" disabled>Отправить</button>
         <p class="form-note">Ответим на любые предложения в течение двух рабочих дней.</p>
       </form>
     </div>
   </section>
+
+  </main>
 
   <!-- ================= FOOTER ================= -->
   <footer class="footer">
@@ -142,9 +237,9 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="footer-logo" id="footer-logo"></div>
-          <p id="footer-blurb" style="margin-top:16px"></p>
+          <p id="footer-blurb"></p>
         </div>
-        <div class="footer-cols" id="footer-cols" style="display:contents"></div>
+        <div class="footer-cols" id="footer-cols"></div>
       </div>
       <div class="footer-bottom">
         <span id="footer-copy"></span>
@@ -156,12 +251,16 @@
 
   <!-- ================= SCRIPTS ================= -->
   <!-- 1) config + theme load first (plain scripts, set globals) -->
-  <script src="assets/js/config.js?v=11"></script>
-  <script src="assets/js/theme.js?v=5"></script>
-  <script src="assets/js/placeholder.js"></script>
-  <script src="assets/js/cursor.js?v=1"></script>
+  <script src="assets/js/config.js?v=24"></script>
+  <script src="assets/js/images.js?v=1"></script>
+  <script src="assets/js/theme.js?v=6"></script>
+  <script src="assets/js/placeholder.js?v=2"></script>
+  <script src="assets/js/cursor.js?v=2"></script>
   <script src="assets/js/cookie.js?v=1"></script>
-  <!-- 2) Three.js module resolution for the 3D hero scene -->
+  <!-- 2) inertial scroll + shared effects (grain, spotlight, card stack, tagline) -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="assets/js/fx.js?v=4"></script>
+  <!-- 3) Three.js module resolution for the 3D hero scene -->
   <script type="importmap">
   {
     "imports": {
@@ -170,8 +269,8 @@
     }
   }
   </script>
-  <!-- 3) page logic + 3D scene (ES modules, deferred automatically) -->
-  <script type="module" src="assets/js/main.js?v=6"></script>
-  <script type="module" src="assets/js/scene.js?v=8"></script>
+  <!-- 4) page logic + 3D scene (ES modules, deferred automatically) -->
+  <script type="module" src="assets/js/main.js?v=27" blocking="render"></script>
+  <script type="module" src="assets/js/scene.js?v=19"></script>
 </body>
 </html>

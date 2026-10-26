@@ -2,6 +2,8 @@
    main.js — builds the HOME page from config.js and wires up interactions.
    ========================================================================== */
 const C = window.SITE_CONFIG || {};
+/* light web copy of an image (tools/optimize-images.py), or the original */
+const O = (s, k) => (window.optImg ? window.optImg(s, k) : s);
 
 /* ---------- tiny helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -18,18 +20,32 @@ const ICON = {
 document.addEventListener("DOMContentLoaded", () => {
   buildNav();
   buildHero();
+  buildMarquee();
   buildAbout();
+  buildTagline();
+  buildBenefits();
+  buildProcess();
+  buildPartners();
   buildPortfolio();
   buildNews();
+  buildFinalCta();
   buildContact();
   buildFooter();
 
   initNavBehavior();
   initReveal();
+  initPartnersLight();
   initHeroIntro();
   initScrollSpy();
   initNewsModal();
+  initFinalCtaVideo();
+
+  // scroll-linked effects from fx.js need the built DOM
+  if (window.FX) { FX.initDeck($("#deck")); FX.initTagline($("#tagline-text")); }
 });
+
+/* hide a whole section when its config block is empty */
+function hide(sel) { const el = $(sel); if (el) el.hidden = true; }
 
 /* logo markup: image (with optional light variant) if a source is set, else text */
 function brandLogoHTML(b) {
@@ -69,6 +85,25 @@ function buildHero() {
       <div class="stat-value" data-count="${Number(s.value) || 0}">0<span class="text-gold">${esc(s.suffix || "")}</span></div>
       <div class="stat-label">${esc(s.label)}</div>
     </div>`).join("");
+
+  // live panel of the 3D quarter: clock of the scene's day + optional sound
+  const sc = C.scene || {};
+  const proc = $("#hero-process");
+  if (proc) {
+    if (sc.enabled === false) proc.hidden = true;
+    else proc.innerHTML = `
+      <div class="hero-live">
+        <span class="hl-pulse" aria-hidden="true"></span>
+        <span class="hl-time" id="scene-time">--:--</span>
+        <span class="hl-phase" id="scene-phase"></span>
+        <button class="hl-sound" id="scene-sound" type="button" aria-pressed="false">
+          <svg class="hl-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="m17 9 4 6M21 9l-4 6"/></svg>
+          <svg class="hl-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+          <span>${esc(sc.soundLabel || "Звук")}</span>
+        </button>
+      </div>` +
+      (sc.hint ? `<p class="hero-process-hint">${esc(sc.hint)}</p>` : "");
+  }
 }
 
 /* ---------- ABOUT ---------- */
@@ -88,7 +123,149 @@ function buildAbout() {
   const aboutImg = $("#about-image");
   aboutImg.dataset.ph = "Meridian Build — Studio";
   aboutImg.onerror = () => window.PH && PH.set(aboutImg, aboutImg.dataset.ph);
-  if (a.image) aboutImg.src = a.image;
+  if (a.image) aboutImg.src = O(a.image, "hero");
+
+  // floating badge overlapping the image
+  const badge = $("#about-badge");
+  if (badge && a.badge && a.badge.value) {
+    badge.innerHTML = `<span class="about-badge-value">${esc(a.badge.value)}</span>` +
+                      `<span class="about-badge-label">${esc(a.badge.label || "")}</span>`;
+    badge.hidden = false;
+  }
+}
+
+/* ---------- MARQUEE (areas of work, endless loop) ---------- */
+function buildMarquee() {
+  const items = C.marquee || [];
+  const el = $("#marquee");
+  if (!el) return;
+  if (!items.length) { el.hidden = true; return; }
+  const row = items.map(t => `<span class="marquee-item">${esc(t)}</span>`).join("");
+  // two identical rows → translate by -50% for a seamless loop; the copy is hidden from AT
+  el.innerHTML = `<div class="marquee-track"><div class="marquee-row">${row}</div>` +
+                 `<div class="marquee-row" aria-hidden="true">${row}</div></div>`;
+}
+
+/* ---------- TAGLINE (each word lights up on scroll, see fx.js) ---------- */
+function buildTagline() {
+  const lines = (C.tagline && C.tagline.lines) || [];
+  if (!lines.length) return hide("#tagline");
+  // --w = word position inside its line → words on one line light up in reading order
+  $("#tagline-text").innerHTML = lines.map(line =>
+    `<span class="tl-line">${line.split(/\s+/).filter(Boolean)
+      .map((w, k) => `<span class="tl-word" style="--w:${k}">${esc(w)}</span>`).join(" ")}</span>`).join(" ");
+}
+
+/* ---------- BENEFITS ---------- */
+function buildBenefits() {
+  const b = C.benefits || {};
+  if (!(b.items || []).length) return hide("#benefits");
+  $("#benefits-eyebrow").textContent = b.eyebrow || "";
+  $("#benefits-title").textContent = b.title || "";
+  $("#benefits-proof").innerHTML = (b.proof || []).map(p => `
+    <div class="proof">
+      <span class="proof-value">${esc(p.value)}</span>
+      <span class="proof-label">${esc(p.label)}</span>
+    </div>`).join("");
+  $("#benefits-list").innerHTML = b.items.map((it, i) => `
+    <li class="benefit" data-reveal data-reveal-delay="${(i % 2) + 1}">
+      <span class="benefit-num">${String(i + 1).padStart(2, "0")}</span>
+      <div>
+        <h3 class="benefit-title">${esc(it.title)}</h3>
+        <p class="benefit-text">${esc(it.text)}</p>
+        ${it.link ? `<a class="text-link" href="${esc(it.link.href)}">${esc(it.link.label)} ${ICON.arrow}</a>` : ""}
+      </div>
+    </li>`).join("");
+}
+
+/* ---------- PROCESS (three steps, line draws on reveal) ---------- */
+function buildProcess() {
+  const p = C.process || {};
+  if (!(p.steps || []).length) return hide("#process");
+  $("#process-eyebrow").textContent = p.eyebrow || "";
+  $("#process-title").textContent = p.title || "";
+  $("#process-steps").innerHTML = p.steps.map((s, i) => `
+    <li class="process-step" data-reveal data-reveal-delay="${i + 1}">
+      <span class="process-node" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+      <h3 class="process-title">${esc(s.title)}</h3>
+      <p class="process-text">${esc(s.text)}</p>
+    </li>`).join("");
+}
+
+/* ---------- FINAL CTA ---------- */
+/* ---------- PARTNERS (mono at rest, own colours on hover) ---------- */
+function buildPartners() {
+  const p = C.partners || {};
+  const items = p.items || [];
+  if (!items.length) return hide("#partners");
+  $("#partners-eyebrow").textContent = p.eyebrow || "";
+  $("#partners-title").textContent = p.title || "";
+  $("#partners-text").textContent = p.text || "";
+  $("#partners-wall").innerHTML = items.map((it, i) => {
+    // absolute URL: a relative url() inside a custom property resolves against the stylesheet
+    const mono = new URL(it.mono || String(it.logo).replace(/\.png$/i, "-mono.png"), location.href).href;
+    const tag = it.href ? "a" : "div";
+    const link = it.href ? ` href="${esc(it.href)}" target="_blank" rel="noopener"` : "";
+    return `
+    <li class="partner" data-reveal data-reveal-delay="${(i % 6) % 4 + 1}">
+      <${tag} class="partner-tile"${link} title="${esc(it.name)}" tabindex="${it.href ? 0 : -1}">
+        <span class="partner-mono" style="--mask:url('${esc(mono)}')" aria-hidden="true"></span>
+        <img class="partner-color" src="${esc(it.logo)}" alt="${esc(it.name)}" loading="lazy" decoding="async">
+        <span class="partner-name">${esc(it.name)}</span>
+      </${tag}>
+    </li>`;
+  }).join("");
+}
+
+/* the cursor is a lamp: tiles near it brighten a little (--near 0..1) */
+function initPartnersLight() {
+  const wall = $("#partners-wall");
+  if (!wall || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const tiles = Array.from(wall.querySelectorAll(".partner-tile"));
+  let x = 0, y = 0, ticking = false;
+  const update = () => {
+    ticking = false;
+    tiles.forEach(t => {
+      const r = t.getBoundingClientRect();
+      const d = Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2));
+      const near = Math.max(0, 1 - d / (r.width * 1.6));
+      t.style.setProperty("--near", (near * near).toFixed(3));
+    });
+  };
+  wall.addEventListener("pointermove", e => {
+    x = e.clientX; y = e.clientY;
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  wall.addEventListener("pointerleave", () => tiles.forEach(t => t.style.setProperty("--near", "0")));
+}
+
+function buildFinalCta() {
+  const f = C.finalCta || {};
+  if (!f.cta) return hide("#final-cta");
+  $("#final-cta-eyebrow").textContent = f.eyebrow || "";
+  $("#final-cta-title").innerHTML = (f.titleLines || []).map(t => `<span class="line">${esc(t)}</span>`).join(" ");
+  $("#final-cta-text").textContent = f.text || "";
+  $("#final-cta-actions").innerHTML =
+    `<a class="btn btn-primary btn-lg" href="${esc(f.cta.href)}">${esc(f.cta.label)} ${ICON.arrow}</a>`;
+  const v = $("#final-cta-video");
+  if (f.poster) v.poster = f.poster;
+  if (f.video) v.dataset.src = f.video;
+}
+
+/* play the dimmed background video only while the block is on screen */
+function initFinalCtaVideo() {
+  const v = $("#final-cta-video");
+  if (!v || !v.dataset.src || !("IntersectionObserver" in window)) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const io = new IntersectionObserver((ents) => {
+    ents.forEach(en => {
+      if (en.isIntersecting) {
+        if (!v.src) v.src = v.dataset.src;
+        v.play().catch(() => {});
+      } else v.pause();
+    });
+  }, { threshold: 0.1 });
+  io.observe(v);
 }
 
 /* ---------- PORTFOLIO ---------- */
@@ -106,20 +283,46 @@ function buildPortfolio() {
       `<button class="filter${i === 0 ? " active" : ""}" data-filter="${esc(c)}">${esc(c)}</button>`).join("");
   }
 
-  $("#projects-grid").innerHTML = projects.map((pr, i) => `
+  // Each project is a real card: a face (corner index, photo, title) and a back
+  // with the brand mark. fx.js deals them from a pile into a fan that turns
+  // while the page scrolls.
+  const mark = brandLogoHTML(C.brand || {});
+  $("#projects-grid").innerHTML = projects.map((pr, i) => {
+    const num = String(i + 1).padStart(2, "0");
+    return `
     <a class="card" href="project.html?id=${encodeURIComponent(pr.id)}" data-cat="${esc(pr.category || "")}"
-       data-reveal data-reveal-delay="${(i % 3) + 1}" aria-label="${esc(pr.title)} — view project">
-      <img class="card-img" src="${esc(pr.thumb || pr.heroSrc)}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
-           data-ph="${esc(pr.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
-      ${pr.status ? `<span class="card-status">${esc(pr.status)}</span>` : ""}
-      <span class="card-arrow" aria-hidden="true">${ICON.arrow}</span>
-      <div class="card-overlay">
-        <div class="card-cat">${esc(pr.category || "")} · ${esc(pr.year || "")}</div>
-        <h3 class="card-title">${esc(pr.title)}</h3>
-        <div class="card-meta">${esc(pr.location || "")}</div>
-        <p class="card-summary">${esc(pr.summary || "")}</p>
-      </div>
-    </a>`).join("");
+       aria-label="${esc(pr.title)} — view project">
+      <span class="pcard-inner">
+        <span class="pcard-face">
+          <span class="pcard-top">
+            <span class="pcard-num">${num}</span>
+            <span class="pcard-suit" aria-hidden="true"></span>
+          </span>
+          <span class="pcard-media">
+            <img class="card-img" src="${esc(O(pr.thumb || pr.heroSrc, "card"))}" alt="${esc(pr.title)}" loading="lazy" decoding="async"
+                 data-ph="${esc(pr.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
+            ${pr.status ? `<span class="card-status">${esc(pr.status)}</span>` : ""}
+          </span>
+          <span class="pcard-body">
+            <span class="card-cat">${esc(pr.category || "")} · ${esc(pr.year || "")}</span>
+            <h3 class="card-title">${esc(pr.title)}</h3>
+            <span class="card-meta">${esc(pr.location || "")}</span>
+            <p class="card-summary">${esc(pr.summary || "")}</p>
+            <span class="card-cta">Смотреть проект ${ICON.arrow}</span>
+          </span>
+          <span class="pcard-corner" aria-hidden="true">${num}</span>
+          <span class="pcard-glare" aria-hidden="true"></span>
+        </span>
+        <span class="pcard-back" aria-hidden="true">
+          <svg class="pcard-pattern" width="100%" height="100%"><defs>
+            <pattern id="pcp-${i}" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <path d="M0 0V12" stroke="currentColor" stroke-width="1"/></pattern></defs>
+            <rect width="100%" height="100%" fill="url(#pcp-${i})"/></svg>
+          <span class="pcard-back-mark">${mark}</span>
+        </span>
+      </span>
+    </a>`;
+  }).join("");
 
   // filtering
   const grid = $("#projects-grid");
@@ -133,6 +336,7 @@ function buildPortfolio() {
       const show = f === "All" || card.dataset.cat === f;
       card.style.display = show ? "" : "none";
     });
+    if (window.FX && FX.refreshDeck) FX.refreshDeck();
   });
 }
 
@@ -159,7 +363,7 @@ function buildNews() {
     <button class="news-card" data-news-id="${esc(it.id)}" data-reveal data-reveal-delay="${(i % 3) + 1}"
             aria-label="${esc(it.title)} — открыть">
       <span class="news-card-media">
-        <img src="${esc(it.thumb || "")}" alt="${esc(it.title)}" loading="lazy" decoding="async"
+        <img src="${esc(O(it.thumb || "", "card"))}" alt="${esc(it.title)}" loading="lazy" decoding="async"
              data-ph="${esc(it.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)">
       </span>
       <time class="news-card-date">${esc(fmtDate(it.date))}</time>
@@ -180,7 +384,7 @@ function initNewsModal() {
   function open(it) {
     img.dataset.ph = it.title;
     img.onerror = () => window.PH && PH.set(img, it.title);
-    img.src = it.thumb || "";
+    img.src = O(it.thumb || "", "hero");
     img.alt = it.title || "";
     dateEl.textContent = fmtDate(it.date);
     titleEl.textContent = it.title || "";
@@ -240,7 +444,30 @@ function buildContact() {
 
   const form = $("#contact-form");
   if (c.formAction) form.setAttribute("action", c.formAction), form.setAttribute("method", "post");
+
+  // Inline client-side validation (no browser bubbles, no alerts).
+  const rules = [
+    { el: $("#f-name"),  err: $("#f-name-err"),  test: v => v.trim().length > 1,
+      msg: "Укажите, как к вам обращаться." },
+    { el: $("#f-email"), err: $("#f-email-err"), test: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+      msg: "Проверьте адрес почты, например name@company.ru" },
+    { el: $("#f-msg"),   err: $("#f-msg-err"),   test: v => v.trim().length > 9,
+      msg: "Опишите задачу хотя бы в одном предложении." }
+  ].filter(r => r.el && r.err);
+  const check = (r) => {
+    const ok = r.test(r.el.value);
+    r.err.textContent = ok ? "" : r.msg;
+    r.el.setAttribute("aria-invalid", ok ? "false" : "true");
+    return ok;
+  };
+  rules.forEach(r => {
+    r.el.addEventListener("blur", () => { if (r.el.value) check(r); });
+    r.el.addEventListener("input", () => { if (r.el.getAttribute("aria-invalid") === "true") check(r); });
+  });
+
   form.addEventListener("submit", (e) => {
+    const bad = rules.filter(r => !check(r));
+    if (bad.length) { e.preventDefault(); bad[0].el.focus(); return; }
     if (!c.formAction) {
       e.preventDefault();
       const btn = submit || form.querySelector("button[type=submit]");
@@ -276,11 +503,17 @@ function initNavBehavior() {
   links.addEventListener("click", (e) => { if (e.target.closest("a")) links.classList.remove("open"); });
 }
 
+/* after the fade up, drop the GPU layer the element was prepared with */
+function release(el) {
+  const done = (e) => { if (e.target === el && e.propertyName === "opacity") { el.style.willChange = "auto"; el.removeEventListener("transitionend", done); } };
+  el.addEventListener("transitionend", done);
+}
+
 function initReveal() {
   const items = document.querySelectorAll("[data-reveal]");
   if (!("IntersectionObserver" in window)) { items.forEach(i => i.classList.add("in")); return; }
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); release(en.target); } });
   }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
   items.forEach(i => io.observe(i));
 }
@@ -331,6 +564,6 @@ function initScrollSpy() {
         links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === `#${en.target.id}`));
       }
     });
-  }, { threshold: 0.5 });
+  }, { rootMargin: "-45% 0px -54% 0px", threshold: 0 }); // a line mid-screen: works for very tall sections
   sections.forEach(s => io.observe(s));
 }

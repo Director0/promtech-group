@@ -5,6 +5,8 @@
    specifications table, services, gallery (with lightbox), and next-project link.
    ========================================================================== */
 const C = window.SITE_CONFIG || {};
+/* light web copy of an image (tools/optimize-images.py), or the original */
+const O = (s, k) => (window.optImg ? window.optImg(s, k) : s);
 const $ = (s, r = document) => r.querySelector(s);
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, m => (
   { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
@@ -76,11 +78,16 @@ function buildFooter() {
 /* ---------- hero (image or video) ---------- */
 function renderHero(p) {
   const media = (p.heroType === "video" && p.heroSrc)
-    ? `<video id="hero-video" autoplay muted loop playsinline ${p.heroPoster ? `poster="${esc(p.heroPoster)}"` : ""}>
+    ? `<video id="hero-video" autoplay muted loop playsinline ${p.heroPoster ? `poster="${esc(O(p.heroPoster, "hero"))}"` : ""}>
          <source src="${esc(p.heroSrc)}" type="video/mp4">
        </video>`
-    : `<img src="${esc(p.heroSrc || p.thumb)}" alt="${esc(p.title)}"
-            data-ph="${esc(p.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)" />`;
+    : `<img class="hero-main" src="${esc(O(p.heroSrc || p.thumb, "hero"))}" alt="${esc(p.title)}"
+            data-ph="${esc(p.title)}" onload="this.classList.add('is-loaded')"
+            onerror="window.PH&&PH.set(this,this.dataset.ph)" />`;
+  // the card photo (already cached from the home page) sits under the full
+  // hero image, so the card → hero morph lands on a picture, never on a gap
+  const placeholder = p.thumb && p.heroType !== "video"
+    ? `<img class="hero-ph" src="${esc(O(p.thumb, "card"))}" alt="" aria-hidden="true" />` : "";
 
   const meta = [
     p.category && `<span><b>${esc(p.category)}</b></span>`,
@@ -90,7 +97,7 @@ function renderHero(p) {
   ].filter(Boolean).join("");
 
   $("#project-hero").innerHTML = `
-    ${media}
+    <div class="project-hero-media">${placeholder}${media}</div>
     <div class="project-hero-scrim"></div>
     <div class="project-hero-content">
       <div class="container">
@@ -126,7 +133,7 @@ function renderBody(p) {
   const services = (p.services || []).map(s => `<li>${esc(s)}</li>`).join("");
 
   const gallery = (p.gallery || []).map(src =>
-    `<img src="${esc(src)}" alt="${esc(p.title)} — gallery image" loading="lazy" decoding="async" data-zoom
+    `<img src="${esc(O(src, "hero"))}" data-full="${esc(src)}" alt="${esc(p.title)} — gallery image" loading="lazy" decoding="async" data-zoom
           data-ph="${esc(p.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)" />`).join("");
 
   $("#project-body").innerHTML = `
@@ -179,7 +186,7 @@ function initLightbox() {
   const lb = $("#lightbox"), lbImg = $("#lightbox-img");
   document.addEventListener("click", (e) => {
     const img = e.target.closest("[data-zoom]");
-    if (img) { lbImg.src = img.src; lb.classList.add("open"); document.body.style.overflow = "hidden"; }
+    if (img) { lbImg.src = img.dataset.full || img.src; lb.classList.add("open"); document.body.style.overflow = "hidden"; }
     if (e.target.closest("#lightbox-close") || e.target === lb) {
       lb.classList.remove("open"); document.body.style.overflow = "";
     }
@@ -194,7 +201,14 @@ function initReveal() {
   const items = document.querySelectorAll("[data-reveal]");
   if (!("IntersectionObserver" in window)) { items.forEach(i => i.classList.add("in")); return; }
   const io = new IntersectionObserver((ents) => {
-    ents.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    ents.forEach(en => {
+      if (!en.isIntersecting) return;
+      const el = en.target;
+      el.classList.add("in"); io.unobserve(el);
+      // drop the GPU layer once the fade up is over
+      const done = (e) => { if (e.target === el && e.propertyName === "opacity") { el.style.willChange = "auto"; el.removeEventListener("transitionend", done); } };
+      el.addEventListener("transitionend", done);
+    });
   }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
   items.forEach(i => io.observe(i));
 }
