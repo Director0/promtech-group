@@ -1431,7 +1431,20 @@ html.is-webkit .scene-label { backdrop-filter: none; -webkit-backdrop-filter: no
 html.is-webkit .card-status { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(0, 0, 0, 0.72); }
 html.is-webkit .pcard-glare { mix-blend-mode: normal;
   background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.14), transparent 55%); }
-html.is-webkit .grain { background-image: var(--grain-png, none); }
+html.is-webkit .grain.is-baked { background-image: var(--grain-png); background-size: 160px 160px; }
+
+/* deck: Safari mis-sorts sibling cards that each hold a preserve-3d flip and
+   leaks mirrored faces through backface-visibility. Same flip, done flat:
+   fx.js puts the perspective into the inner transform and swaps face / back
+   at 90°, so z-index alone decides which card is on top. */
+html.is-webkit .card { perspective: none; }
+html.is-webkit .pcard-inner { transform-style: flat; transform: none; }
+html.is-webkit .pcard-face, html.is-webkit .pcard-back { backface-visibility: visible; -webkit-backface-visibility: visible; }
+html.is-webkit .pcard-back { transform: none; }
+html.is-webkit .card:not(.is-front) .pcard-face,
+html.is-webkit .card.is-front .pcard-back,
+html.is-webkit .deck--static .pcard-back { visibility: hidden; }
+html.is-webkit .deck--static .pcard-face { visibility: visible; }
 html.is-ios .nav::before, html.is-ios .nav.scrolled::before { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 html.is-webkit[data-theme="light"] .pcard-glare {
   background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.6), transparent 55%); }

@@ -13,6 +13,7 @@
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var lenis = null;
+  var WK = document.documentElement.classList.contains("is-webkit");
 
   /* ---------- inertial scroll ---------- */
   function initLenis() {
@@ -65,18 +66,24 @@
     var g = document.createElement("div");
     g.className = "grain";
     g.setAttribute("aria-hidden", "true");
-    // Safari re-rasterises the SVG turbulence filter; give it a baked bitmap
-    if (document.documentElement.classList.contains("is-webkit")) {
-      try {
-        var cv = document.createElement("canvas"); cv.width = cv.height = 160;
-        var cx = cv.getContext("2d"), im = cx.createImageData(160, 160), d = im.data;
-        for (var i = 0; i < d.length; i += 4) {
-          d[i] = d[i + 1] = d[i + 2] = 255;
-          d[i + 3] = Math.min(255, Math.max(0, (Math.random() + Math.random() + Math.random() - 1.5) * 200 + 128));
-        }
-        cx.putImageData(im, 0, 0);
-        g.style.setProperty("--grain-png", "url(" + cv.toDataURL("image/png") + ")");
-      } catch (e) {}
+    // Safari re-rasterises the SVG turbulence filter as the layer moves: bake
+    // the very same SVG once into a bitmap at the screen's pixel density
+    if (WK) {
+      document.body.appendChild(g);
+      var url = (getComputedStyle(g).backgroundImage.match(/url\("?(.*?)"?\)$/) || [])[1];
+      if (!url) return;
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var k = Math.min(window.devicePixelRatio || 1, 3), cv = document.createElement("canvas");
+          cv.width = cv.height = Math.round(160 * k);
+          cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+          g.style.setProperty("--grain-png", "url(" + cv.toDataURL("image/png") + ")");
+          g.classList.add("is-baked");
+        } catch (e) {}
+      };
+      img.src = url;
+      return;
     }
     document.body.appendChild(g);
   }
@@ -185,7 +192,15 @@
 
       var tf = "translate(-50%,-50%) translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0) rotate(" +
                r.toFixed(2) + "deg) scale(" + s.toFixed(4) + ")";
-      var ti = "rotateY(" + f.toFixed(1) + "deg) rotateX(" + c.rx.toFixed(2) + "deg) rotateY(" + c.ry.toFixed(2) + "deg)";
+      var ti;
+      if (WK) {
+        // flat flip (see styles.css): past 90° the back is shown, turned by f - 180
+        var front = f <= 90;
+        if (front !== c.front) { c.el.classList.toggle("is-front", front); c.front = front; }
+        ti = "perspective(1200px) rotateY(" + (front ? f : f - 180).toFixed(1) + "deg) rotateX(" + c.rx.toFixed(2) + "deg) rotateY(" + c.ry.toFixed(2) + "deg)";
+      } else {
+        ti = "rotateY(" + f.toFixed(1) + "deg) rotateX(" + c.rx.toFixed(2) + "deg) rotateY(" + c.ry.toFixed(2) + "deg)";
+      }
       if (tf !== c.tf) { c.el.style.transform = tf; c.tf = tf; }
       if (ti !== c.ti) { c.inner.style.transform = ti; c.ti = ti; }
       if (z !== c.z) { c.el.style.zIndex = z; c.z = z; }
