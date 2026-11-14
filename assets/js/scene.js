@@ -37,6 +37,7 @@ const hero = document.getElementById("home");
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const stillMode = /[?&]still/.test(location.search);
 const isMobile = window.innerWidth < 760;
+const isWebKit = document.documentElement.classList.contains("is-webkit");
 
 /* ---------- dimensions of the quarter (world units) ---------- */
 const FLOOR_H = 0.36, CELL_W = 0.42;
@@ -356,7 +357,11 @@ function boot() {
 
   /* ---------- renderer, camera, post ---------- */
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
-  const pixelRatio = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 1.75);
+  // Safari's WebGL (ANGLE over Metal) is slower per pixel: start lower there,
+  // and everywhere drop the resolution step by step if frames run long
+  const dpr = window.devicePixelRatio || 1;
+  let pixelRatio = Math.min(dpr, isWebKit ? (isMobile ? 1.25 : 1.35) : (isMobile ? 1.5 : 1.75));
+  const minRatio = Math.min(dpr, 1);
   renderer.setPixelRatio(pixelRatio);
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -371,7 +376,7 @@ function boot() {
 
   let composer = null, tiltH = null, tiltV = null;
   if (!isMobile) {
-    const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
+    const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: isWebKit ? 2 : 4 });
     composer = new EffectComposer(renderer, rt);
     composer.addPass(new RenderPass(scene, camera));
     tiltH = new ShaderPass(TiltShift); tiltV = new ShaderPass(TiltShift);
@@ -1238,9 +1243,14 @@ function boot() {
   canvas.style.cursor = "grab";
 
   /* ---------- framing: the diorama sits to the right of the hero copy ---------- */
+  let sizedW = 0, sizedH = 0, sizedR = 0;
   function resize() {
     measure();
     W = Math.max(1, canvasRect.width); H = Math.max(1, canvasRect.height);
+    // iOS fires resize while its toolbar slides; same size → keep the buffers
+    if (W === sizedW && H === sizedH && pixelRatio === sizedR) return;
+    sizedW = W; sizedH = H; sizedR = pixelRatio;
+    renderer.setPixelRatio(pixelRatio);
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     const aspect = W / H;
@@ -1266,8 +1276,10 @@ function boot() {
   /* ---------- loop ---------- */
   let last = 0, t = 0, looping = false;
   function frame(now) {
-    const dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
+    const raw = last ? (now - last) / 1000 : 0.016;
+    const dt = Math.min(raw, 0.05);
     last = now; t += dt;
+    adapt(raw);
     U.time.value = t;
     const intro = clamp01(t / 2.4);
     U.intro.value = intro;
@@ -1288,6 +1300,21 @@ function boot() {
     hudT -= dt;
     if (hudT <= 0) { hudT = 0.25; updateHud(); }
     render();
+  }
+  // adaptive resolution: if the last ~1.5 s averaged under ~40 fps, render
+  // fewer pixels (never below CSS resolution). 30 fps power-saving caps on
+  // phones only cost one step: the ratio stops at minRatio.
+  let perfSum = 0, perfN = 0;
+  function adapt(raw) {
+    if (raw <= 0 || raw > 0.25 || t < 3) return;           // skip tab switches + the intro
+    perfSum += raw; perfN++;
+    if (perfN < 90) return;
+    const avg = perfSum / perfN; perfSum = 0; perfN = 0;
+    if (avg > 1 / 40 && pixelRatio > minRatio) {
+      pixelRatio = Math.max(minRatio, Math.round((pixelRatio - 0.25) * 100) / 100);
+      U.pixel.value = pixelRatio;
+      resize();
+    }
   }
   function TL_UPDATE() {
     const on = (p) => (TL.phase === p ? 2.4 : 0.12);

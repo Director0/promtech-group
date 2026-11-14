@@ -17,6 +17,9 @@
   /* ---------- inertial scroll ---------- */
   function initLenis() {
     if (reduce || typeof window.Lenis !== "function") return;
+    // Safari / iOS: native scrolling is already inertial and runs off the main
+    // thread; Lenis there fights the trackpad momentum and stutters under load
+    if (document.documentElement.classList.contains("is-webkit") || !finePointer) return;
     lenis = new window.Lenis({ duration: 1.15, easing: function (t) { return 1 - Math.pow(1 - t, 4); } });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
@@ -62,6 +65,19 @@
     var g = document.createElement("div");
     g.className = "grain";
     g.setAttribute("aria-hidden", "true");
+    // Safari re-rasterises the SVG turbulence filter; give it a baked bitmap
+    if (document.documentElement.classList.contains("is-webkit")) {
+      try {
+        var cv = document.createElement("canvas"); cv.width = cv.height = 160;
+        var cx = cv.getContext("2d"), im = cx.createImageData(160, 160), d = im.data;
+        for (var i = 0; i < d.length; i += 4) {
+          d[i] = d[i + 1] = d[i + 2] = 255;
+          d[i + 3] = Math.min(255, Math.max(0, (Math.random() + Math.random() + Math.random() - 1.5) * 200 + 128));
+        }
+        cx.putImageData(im, 0, 0);
+        g.style.setProperty("--grain-png", "url(" + cv.toDataURL("image/png") + ")");
+      } catch (e) {}
+    }
     document.body.appendChild(g);
   }
 
@@ -99,12 +115,16 @@
     D.step = D.narrow ? 13 : 9;              // degrees between neighbours
     D.R = D.cardH * (D.narrow ? 2.1 : 2.6);  // radius of the arc the fan sits on
     var n = D.cards.length;
-    D.root.style.height = n > 1 ? "calc(100dvh + " + (n - 1) * (D.narrow ? 34 : 42) + "vh)" : "100dvh";
+    // svh/lvh-free sizing: the stage height is fixed (100svh), so the iOS
+    // toolbar showing / hiding never resizes the deck mid-scroll
+    D.root.style.height = n > 1 ? "calc(100svh + " + (n - 1) * (D.narrow ? 34 : 42) + "svh)" : "100svh";
+    D.stageH = (D.stage && D.stage.offsetHeight) || window.innerHeight;
+    D.rootH = D.root.offsetHeight;
   }
 
   function deckReadScroll() {
     var n = D.cards.length;
-    var span = D.root.offsetHeight - window.innerHeight;
+    var span = D.rootH - D.stageH;
     var p = span > 0 ? clamp01(-D.root.getBoundingClientRect().top / span) : 0;
     D.p = p;
     D.target = p * Math.max(n - 1, 0);
@@ -222,7 +242,7 @@
     var fan = root.querySelector(".deck-fan");
     if (!fan) return;
     D = {
-      root: root, fan: fan, cards: [], pos: 0, target: 0, p: 0, idx: -1,
+      root: root, fan: fan, stage: root.querySelector(".deck-stage") || root, cards: [], pos: 0, target: 0, p: 0, idx: -1,
       dealt: false, dealStart: 0, gathering: false, gatherStart: 0, running: false, raf: 0,
       curEl: $id("deck-cur"), totalEl: $id("deck-total"), bar: $id("deck-bar"),
       prev: $id("deck-prev"), next: $id("deck-next"), hint: $id("deck-hint"), hover: null
@@ -257,6 +277,7 @@
     dealIO.observe(root);
 
     if (window.ResizeObserver) new ResizeObserver(function () { deckMeasure(); }).observe(fan);
+    window.addEventListener("resize", deckMeasure, { passive: true });
 
     if (D.prev) D.prev.addEventListener("click", function () { deckScrollTo(D.idx - 1); });
     if (D.next) D.next.addEventListener("click", function () { deckScrollTo(D.idx + 1); });

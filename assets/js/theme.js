@@ -3,6 +3,16 @@
    Dark is the default. The choice is saved to localStorage and re-applied on
    every page. window.toggleTheme() flips it; the #theme-toggle button calls it.
    ========================================================================== */
+/* WebKit (Safari on macOS, every browser on iOS / iPadOS) gets lighter
+   rendering paths: html.is-webkit (styles.css, fx.js, scene.js) */
+(function () {
+  var ua = navigator.userAgent;
+  var ios = /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var safari = /^((?!chrome|chromium|android|crios|fxios|edg|opr).)*safari/i.test(ua);
+  if (/[?&]webkit\b/.test(location.search)) safari = true;   // preview the Safari path elsewhere
+  if (ios || safari) document.documentElement.classList.add("is-webkit");
+  if (ios) document.documentElement.classList.add("is-ios");
+})();
 (function () {
   var cfg = window.SITE_CONFIG;
   if (!cfg || !cfg.theme) return;

@@ -410,7 +410,7 @@ html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 /* the hero has its own environment: scene.js sets the colour variables on it
    (and on the nav while it floats over the hero) from the scene's time of day,
    blending back to the site theme as the hero scrolls away */
-.hero { position: relative; min-height: 100dvh; display: flex; align-items: center; overflow: hidden; background: var(--bg); color: var(--text); }
+.hero { position: relative; min-height: 100svh; display: flex; align-items: center; overflow: hidden; background: var(--bg); color: var(--text); }
 /* the site theme's background, resolved at the root (the hero overrides --bg) */
 :root { --site-bg: var(--bg); }
 /* while the hero scrolls away, its bottom edge melts into the next section
@@ -772,9 +772,9 @@ html[data-theme="light"] .partners-wall { --paper: #ffffff; }
 .filter.active { background: var(--gold); color: var(--on-accent); border-color: var(--gold); }
 
 /* tall scroll track (height set by fx.js) + pinned stage */
-.deck { position: relative; height: 100dvh; }
+.deck { position: relative; height: 100svh; }
 .deck-stage {
-  position: sticky; top: 0; height: 100dvh; overflow: clip;
+  position: sticky; top: 0; height: 100svh; overflow: clip;
   display: grid; grid-template-rows: auto 1fr auto; gap: 16px;
   padding: 104px 0 32px;
 }
@@ -800,7 +800,7 @@ html[data-theme="light"] .partners-wall { --paper: #ffffff; }
 
 .deck-fan {
   position: relative; z-index: 1; min-height: 0;
-  --card-h: min(460px, calc(100dvh - 300px), calc((100vw - 64px) * 1.4));
+  --card-h: min(460px, calc(100svh - 300px), calc((100vw - 64px) * 1.4));
 }
 
 /* the card: an anchor positioned by fx.js, flipped and tilted via .pcard-inner */
@@ -1094,7 +1094,7 @@ html[data-theme="light"] .final-cta-media::after { background: rgba(255, 255, 25
 /* =============================================================================
    PROJECT DETAIL PAGE
    ========================================================================== */
-.project-hero { position: relative; height: 78dvh; min-height: 560px; max-height: 880px; overflow: hidden; }
+.project-hero { position: relative; height: 78svh; min-height: 560px; max-height: 880px; overflow: hidden; }
 .project-hero img, .project-hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* the hero photo is the target of the card → page morph (see PAGE TRANSITIONS) */
 .project-hero-media { position: absolute; inset: 0; view-transition-name: project-media; }
@@ -1409,3 +1409,29 @@ html.pt-leaving body { opacity: 0; transform: translateY(-16px); transition: opa
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/* =============================================================================
+   WEBKIT (Safari on macOS, all browsers on iOS) — lighter rendering paths.
+   Same motion and timing; only effects Safari paints on the CPU are swapped:
+   animated blur filters, backdrop blur over moving / WebGL content, blend modes
+   inside the 3D card deck, and the SVG-filter grain.
+   ========================================================================== */
+html.is-webkit [data-reveal] { filter: none; will-change: transform, opacity; }
+html.is-webkit .scene-caption span { filter: none; }
+html.is-webkit ::view-transition-old(root) { animation-name: pt-out-wk; }
+html.is-webkit ::view-transition-new(root) { animation-name: pt-in-wk; }
+@keyframes pt-out-wk { to { opacity: 0; transform: translateY(-32px) scale(0.985); } }
+@keyframes pt-in-wk { from { opacity: 0; transform: translateY(48px); } }
+
+/* glass that sits over the live 3D canvas or moves every frame: tinted, unblurred */
+html.is-webkit .cursor { backdrop-filter: none; -webkit-backdrop-filter: none; }
+html.is-webkit .hero-live,
+html.is-webkit .scene-label { backdrop-filter: none; -webkit-backdrop-filter: none;
+  background: color-mix(in srgb, var(--bg) 82%, transparent); }
+html.is-webkit .card-status { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(0, 0, 0, 0.72); }
+html.is-webkit .pcard-glare { mix-blend-mode: normal;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.14), transparent 55%); }
+html.is-webkit .grain { background-image: var(--grain-png, none); }
+html.is-ios .nav::before, html.is-ios .nav.scrolled::before { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+html.is-webkit[data-theme="light"] .pcard-glare {
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.6), transparent 55%); }
