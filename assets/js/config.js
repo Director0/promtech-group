@@ -271,14 +271,14 @@ window.SITE_CONFIG = {
       { name: "Газпром переработка",       logo: "assets/partners/partner-08.png" },
       { name: "Газпром газобезопасность",  logo: "assets/partners/partner-09.png" },
       { name: "Лукойл",                    logo: "assets/partners/partner-10.png" },
-      { name: "Партнёр (уточнить)",        logo: "assets/partners/partner-11.png" },
+      { name: "Крафт",                     logo: "assets/partners/partner-11.png" },
       { name: "Центр прогресса бокса",     logo: "assets/partners/partner-12.png" },
       { name: "Орен-Орс",                  logo: "assets/partners/partner-13.png" },
       { name: "Опора",                     logo: "assets/partners/partner-14.png" },
       { name: "OSG",                       logo: "assets/partners/partner-15.png" },
       { name: "УПСК Жилстрой",             logo: "assets/partners/partner-16.png" },
       { name: "Гранд Парк",                logo: "assets/partners/partner-17.png" },
-      { name: "Муниципальный заказчик (уточнить)", logo: "assets/partners/partner-18.png" }
+      { name: "Правительство Оренбургской обл.", logo: "assets/partners/partner-18.png" }
     ]
   },
 
@@ -400,9 +400,10 @@ window.SITE_CONFIG = {
     achievementsTitle: "Награды и достижения",
     // Each achievement is a single image (diploma / certificate / award).
     achievements: [
-      { title: "Диплом за качество строительства", src: "assets/achievements/quality.jpg" },
-      { title: "Благодарственное письмо",           src: "assets/achievements/thanks.jpg" },
-      { title: "Сертификат ISO 9001",               src: "assets/achievements/iso-9001.jpg" }
+      { title: "Благодарность главы г. Оренбурга", src: "assets/achievements/mayor.png" },
+      { title: "Благодарность Администрации г. Оренбурга",               src: "assets/achievements/orengovern.png" },
+      { title: "Благодарственное письмо Минстроя г. Оренбурга",           src: "assets/achievements/minconstruct.png" },
+      { title: "Благодарность ГТУ г. Самары",               src: "assets/achievements/samarastu.png" }
     ]
   },
 
@@ -423,8 +424,13 @@ window.SITE_CONFIG = {
           description  array of paragraphs
           facts     small highlight stats (shown as cards)
           specs     rows for the SPECIFICATIONS table  [{label, value}]
-          gallery   array of image urls
+          gallery   array of image urls (or { src, caption })
           services  list of what we did
+          sections  any number of extra blocks under the gallery, in order:
+                    [{ eyebrow: "Интерьеры",            ← small label (optional)
+                       title:   "Входная группа",       ← heading
+                       text:    ["абзац 1", "абзац 2"], ← string or array (optional)
+                       gallery: ["./assets/...jpg"] }]  ← images (optional)
      ------------------------------------------------------------------------ */
   portfolio: {
     eyebrow: "Портфолио",
@@ -669,7 +675,7 @@ window.SITE_CONFIG = {
         "./assets/projects/bof-sd20a/th.png",
         "./assets/projects/bof-sd20a/ren2.png",
         "./assets/projects/bof-sd20a/r2.png"
-      ]
+      ],
     },
     {
       id: "bof-sd20a",
@@ -684,7 +690,7 @@ window.SITE_CONFIG = {
       heroSrc: "./assets/projects/bof-sd20a/th.png",
       intro:
         "ЖК «Долгие горы» в Оренбурге, построенный СЗ «ЛИСТ» — это сданный многоквартирный дом типовой застройки. " +
-        "В комплексе 64 квартиры: 40 однокомнатных, 8 двухкомнатных и 16 трёхкомнатных.",
+        "В комплексе 607 квартир: 167 квартир-студий, 267 однокомнатных, 87 двухкомнатных и 86 трёхкомнатных.",
       description: [
         "Жилая площадь составляет 3 239 квадратных метров. В комплексе также предусмотрено 6 нежилых помещений. Максимальная этажность здания — 10 этажей. " +
         "",
@@ -693,14 +699,14 @@ window.SITE_CONFIG = {
       ],
       facts: [
         { value: "3239", label: "m² жилой площади" },
-        { value: "64", label: "квартиры" },
-        { value: "до 10",  label: "этажей" }
+        { value: "607", label: "квартир" },
+        { value: "до 15",  label: "этажей" }
       ],
       specs: [
         { label: "Тип проекта",  value: "Жилой дом" },
         { label: "Жилая площадь",    value: "3239 m²" },
-        { label: "Расположение",     value: "Микрорайон 20а" },
-        { label: "Cladding",      value: "Untreated larch" },
+        { label: "Расположение",     value: "Ленинский район г. Оренбурга, Микрорайон 20а" },
+        { label: "Высота потолков",      value: "2,64–2,70 м" },
         { label: "Heating",       value: "Ground-source heat pump" },
         { label: "Duration",      value: "11 months (2023–2024)" },
         { label: "Energy class",  value: "A+ / near passive" }
