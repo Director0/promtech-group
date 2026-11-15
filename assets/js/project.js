@@ -125,7 +125,7 @@ function renderBody(p) {
   const facts = (p.facts || []).map(f =>
     `<div class="fact"><div class="v">${esc(f.value)}</div><div class="l">${esc(f.label)}</div></div>`).join("");
 
-  const desc = (p.description || []).map(par => `<p>${esc(par)}</p>`).join("");
+  const desc = textHTML(p.description);
 
   const specs = (p.specs || []).map(s =>
     `<tr><th>${esc(s.label)}</th><td>${esc(s.value)}</td></tr>`).join("");
@@ -137,8 +137,7 @@ function renderBody(p) {
   // extra blocks: [{ eyebrow, title, text | paragraphs, gallery }]
   const sections = (p.sections || []).map((sec, i) => {
     if (!sec) return "";
-    const paras = [].concat(sec.text || sec.paragraphs || []).filter(Boolean)
-      .map(par => `<p>${esc(par)}</p>`).join("");
+    const paras = textHTML(sec.text || sec.paragraphs);
     const g = galleryHTML(sec.gallery, sec.title || p.title);
     if (!sec.title && !paras && !g) return "";
     return `
@@ -167,6 +166,35 @@ function renderBody(p) {
           <ul class="services-list">${services}</ul>` : ""}
       </div>
     </aside>`;
+}
+
+/* text from config: a string or a list of strings.
+     • each list item               → its own paragraph
+     • a line break ("\n") inside   → line break
+     • a blank line ("\n\n") inside → new paragraph
+     • every extra blank line, or an empty item "" → an empty line of space */
+function textHTML(src) {
+  const items = [].concat(src == null ? [] : src).map(v => String(v == null ? "" : v));
+  let out = "", lines = [], gap = 0, blank = 0;
+  const close = () => {
+    if (!lines.length) return;
+    if (out && gap > 0) out += `<div class="text-gap" style="height:${Math.min(gap, 4) * 24}px" aria-hidden="true"></div>`;
+    out += `<p>${lines.map(esc).join("<br>")}</p>`;
+    lines = []; gap = 0;
+  };
+  items.forEach(item => {
+    if (!item.trim()) { close(); gap++; return; }
+    blank = 0;
+    item.split(/\r?\n/).forEach(raw => {
+      const line = raw.trim();
+      if (!line) { blank++; return; }
+      if (blank > 0) { close(); gap += blank - 1; }
+      blank = 0;
+      lines.push(line);
+    });
+    close();
+  });
+  return out;
 }
 
 /* gallery images: plain urls or { src, caption } */
