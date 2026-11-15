@@ -676,6 +676,8 @@ window.SITE_CONFIG = {
         "./assets/projects/bof-sd20a/ren2.png",
         "./assets/projects/bof-sd20a/r2.png"
       ],
+      
+
     },
     {
       id: "bof-sd20a",
@@ -683,7 +685,7 @@ window.SITE_CONFIG = {
       category: "Жилые здания",
       year: "2025",
       location: "г. Оренбург, Россия",
-      status: "В эксплуатации",
+      status: "Строится",
       summary: "ЖК «Долгие горы» в Оренбурге, построенный СЗ «ЛИСТ»",
       thumb: "./assets/projects/bof-sd20a/th.png",
       heroType: "image",
@@ -692,10 +694,10 @@ window.SITE_CONFIG = {
         "ЖК «Долгие горы» в Оренбурге, построенный СЗ «ЛИСТ» — это сданный многоквартирный дом типовой застройки. " +
         "В комплексе 607 квартир: 167 квартир-студий, 267 однокомнатных, 87 двухкомнатных и 86 трёхкомнатных.",
       description: [
-        "Жилая площадь составляет 3 239 квадратных метров. В комплексе также предусмотрено 6 нежилых помещений. Максимальная этажность здания — 10 этажей. " +
+        "Проект предусматривает формирование современной жилой застройки, объединяющей функциональность архитектурных решений, рациональную организацию пространства и комфортную городскую среду." + "\n\n" + 
         "",
-        "" +
-        ""
+        "\n" +
+        "Принятые объемно-пространственные и архитектурно-художественные решения жилого дома выполнены на основании архитектурного проекта, разработанного ООО НПП «Промтехнология» для данного объекта, согласованного с Заказчиком строительства, а также в соответствии с общей концепцией застройки участка. Размещение объекта на участке выполнено с учетом окружающей застройки, существующих коммуникаций, рельефа участка и размещения всех необходимых элементов благоустройства территории. Расстояние до окружающей жилой застройки запроектированы в соответствии с требованиями СП 42.13330.2016 «Градостроительство. Планировка и застройка городских и сельских поселений. Актуализированная редакция СНиП 2.07.01-89."
       ],
       facts: [
         { value: "3239", label: "m² жилой площади" },
@@ -703,20 +705,30 @@ window.SITE_CONFIG = {
         { value: "до 15",  label: "этажей" }
       ],
       specs: [
-        { label: "Тип проекта",  value: "Жилой дом" },
+        { label: "Тип проекта",  value: "Жилой комплекс" },
         { label: "Жилая площадь",    value: "3239 m²" },
         { label: "Расположение",     value: "Ленинский район г. Оренбурга, Микрорайон 20а" },
         { label: "Высота потолков",      value: "2,64–2,70 м" },
-        { label: "Heating",       value: "Ground-source heat pump" },
-        { label: "Duration",      value: "11 months (2023–2024)" },
+        { label: "Технология",       value: "Панельное строительство" },
+        { label: "Застройщик",      value: "ГК «ЛИСТ»" },
         { label: "Energy class",  value: "A+ / near passive" }
       ],
-      services: ["Architecture", "Timber engineering", "Main contractor", "Renewables"],
+      services: ["Архитекутрное решение", "ИТП", "Информационная модель (BIM)", "Авторский надзор"],
       gallery: [
         "./assets/projects/bof-sd20a/th.png",
         "./assets/projects/bof-sd20a/ren2.png",
         "./assets/projects/bof-sd20a/r2.png"
+      ],
+      sections: [
+        {
+          text : [
+            "Расположение в микрорайоне 20А определяет особое градостроительное значение проекта. Новая жилая территория становится частью развивающейся городской структуры, формируя дополнительные возможности для проживания и дальнейшего развития прилегающих территорий. При разработке проектных решений особое внимание уделяется взаимосвязи жилой застройки с существующим городским окружением, организации внутриквартальных пространств и созданию условий для полноценного повседневного использования территории." + "\n\n" + "Соседство с Качкарским маром — одна из особенностей локации, поскольку рядом есть территория для прогулок и отдыха."
+          ],
+
+          gallery: ["./assets/projects/bof-sd20a/kachkarskymar.png"]
+        }
       ]
+      
     },
     {
       id: "bof-grandpark",
@@ -767,9 +779,9 @@ window.SITE_CONFIG = {
       location: "пгт. Радумля, Московская обл., Россия",
       status: "Строится",
       summary: "ЖК «Долгие горы» в Оренбурге, построенный СЗ «ЛИСТ»",
-      thumb: "./assets/projects/bof-grandpark/th.jpg",
+      thumb: "./assets/projects/inf-mcdonaldsr/th1.png",
       heroType: "image",
-      heroSrc: "./assets/projects/bof-sd20a/th.png",
+      heroSrc: "./assets/projects/inf-mcdonaldsr/th.png",
       intro:
         "ЖК «Долгие горы» в Оренбурге, построенный СЗ «ЛИСТ» — это сданный многоквартирный дом типовой застройки. " +
         "В комплексе 64 квартиры: 40 однокомнатных, 8 двухкомнатных и 16 трёхкомнатных.",
@@ -890,6 +902,54 @@ window.SITE_CONFIG = {
         "https://picsum.photos/seed/foundry-g3/1200/800"
       ]
     },
+        {
+      id: "prd-orenors",
+      title: "Завод «Орен-ОРС»",
+      category: "Промышленность",
+      year: "2026",
+      location: "г. Оренбург, Россия",
+      // This project uses a VIDEO as its full-width thumbnail.
+      // Swap heroSrc for your own .mp4 and heroPoster for a still frame.
+      heroType: "image",
+      // Demo clip only — replace with your own project film (drone flyover, build timelapse…).
+      heroSrc: "./assets/projects/prd-orenors/th.png",
+      heroPoster: "./assets/projects/prd-orenors/th.png",
+      category2: "",
+      thumb: "./assets/projects/prd-orenors/th.png",
+      year2: "",
+      location2: "",
+      status: "В эксплуатации",
+      summary: "A red-brick warehouse reborn as 24 lofts and a ground-floor market.",
+      intro:
+        "An 1890s iron foundry converted into 24 live-work lofts above a public market hall — " +
+        "retaining the original brick shell and crane gantry while inserting a fully modern core.",
+      description: [
+        "Adaptive reuse at its most demanding: we stitched a new steel frame inside the listed masonry, " +
+        "underpinned the riverside foundations, and threaded services through a building never designed for them.",
+        "The result keeps the soul of the old foundry — exposed brick, riveted columns, vast windows — " +
+        "while delivering contemporary, energy-efficient homes and a market that brought the street back to life."
+      ],
+      facts: [
+        { value: "24",  label: "loft homes" },
+        { value: "1890", label: "original build" },
+        { value: "2",   label: "year programme" }
+      ],
+      specs: [
+        { label: "Project type",  value: "Adaptive reuse, mixed-use" },
+        { label: "Gross area",    value: "6,200 m²" },
+        { label: "Homes",         value: "24 live-work lofts" },
+        { label: "Ground floor",  value: "Public market hall" },
+        { label: "Heritage",      value: "Grade II listed shell retained" },
+        { label: "Duration",      value: "24 months (2021–2023)" }
+      ],
+      services: ["Heritage consulting", "Structural retrofit", "Main contractor", "MEP coordination"],
+      gallery: [
+        "https://picsum.photos/seed/foundry-g1/1200/800",
+        "https://picsum.photos/seed/foundry-g2/1200/800",
+        "https://picsum.photos/seed/foundry-g3/1200/800"
+      ]
+    },
+
     {
       id: "prd-scanservice",
       title: "СТОА «СканСервис»",
@@ -901,9 +961,9 @@ window.SITE_CONFIG = {
       heroType: "image",
       // Demo clip only — replace with your own project film (drone flyover, build timelapse…).
       heroSrc: "./assets/projects/prd-scanservice/render1.png",
-      heroPoster: "./assets/projects/osg-storage/th.png",
+      heroPoster: "./assets/projects/prd-scanservice/th.png",
       category2: "",
-      thumb: "./assets/projects/prd-scanservice/th.png",
+      thumb: "./assets/projects/prd-scanservice/render1.png",
       year2: "",
       location2: "",
       status: "В эксплуатации",
