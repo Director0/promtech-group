@@ -132,9 +132,23 @@ function renderBody(p) {
 
   const services = (p.services || []).map(s => `<li>${esc(s)}</li>`).join("");
 
-  const gallery = (p.gallery || []).map(src =>
-    `<img src="${esc(O(src, "hero"))}" data-full="${esc(src)}" alt="${esc(p.title)} — gallery image" loading="lazy" decoding="async" data-zoom
-          data-ph="${esc(p.title)}" onerror="window.PH&&PH.set(this,this.dataset.ph)" />`).join("");
+  const gallery = galleryHTML(p.gallery, p.title);
+
+  // extra blocks: [{ eyebrow, title, text | paragraphs, gallery }]
+  const sections = (p.sections || []).map((sec, i) => {
+    if (!sec) return "";
+    const paras = [].concat(sec.text || sec.paragraphs || []).filter(Boolean)
+      .map(par => `<p>${esc(par)}</p>`).join("");
+    const g = galleryHTML(sec.gallery, sec.title || p.title);
+    if (!sec.title && !paras && !g) return "";
+    return `
+      <section class="project-section" id="section-${i + 1}">
+        ${sec.eyebrow ? `<p class="eyebrow" data-reveal>${esc(sec.eyebrow)}</p>` : ""}
+        ${sec.title ? `<h2 class="project-section-title" data-reveal>${esc(sec.title)}</h2>` : ""}
+        ${paras ? `<div class="project-desc" data-reveal data-reveal-delay="1">${paras}</div>` : ""}
+        ${g ? `<div class="gallery" data-reveal>${g}</div>` : ""}
+      </section>`;
+  }).join("");
 
   $("#project-body").innerHTML = `
     <div class="project-main">
@@ -143,6 +157,7 @@ function renderBody(p) {
       ${facts ? `<div class="project-facts" data-reveal>${facts}</div>` : ""}
       <div class="project-desc" data-reveal data-reveal-delay="1">${desc}</div>
       ${gallery ? `<div class="gallery" data-reveal>${gallery}</div>` : ""}
+      ${sections}
     </div>
     <aside>
       <div class="aside-card" data-reveal data-reveal-delay="1">
@@ -152,6 +167,17 @@ function renderBody(p) {
           <ul class="services-list">${services}</ul>` : ""}
       </div>
     </aside>`;
+}
+
+/* gallery images: plain urls or { src, caption } */
+function galleryHTML(list, alt) {
+  return (list || []).map(item => {
+    const src = typeof item === "string" ? item : item && item.src;
+    if (!src) return "";
+    const cap = typeof item === "object" && item.caption ? item.caption : "";
+    return `<img src="${esc(O(src, "hero"))}" data-full="${esc(src)}" alt="${esc(cap || alt + " — фото")}" loading="lazy" decoding="async" data-zoom
+          ${cap ? `title="${esc(cap)}"` : ""} data-ph="${esc(alt)}" onerror="window.PH&&PH.set(this,this.dataset.ph)" />`;
+  }).join("");
 }
 
 /* ---------- next project ---------- */
