@@ -316,12 +316,9 @@ function boot() {
     renderer.setPixelRatio(pixelRatio);
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
-    // the checklist card sits bottom-left on wide layouts: nudge the trophy right
-    if (wrap && getComputedStyle(wrap.querySelector(".checklist") || wrap).position === "absolute") camera.setViewOffset(W, H, -W * 0.12, 0, W, H);
-    else camera.clearViewOffset();
     camera.updateProjectionMatrix();
     const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    fitDist = Math.max((TOP * 0.6) / tanV, 2.9 / (tanV * camera.aspect));
+    fitDist = Math.max((TOP * 0.6) / tanV, 2.3 / (tanV * camera.aspect));
     if (!looping) render();
   }
   function render() { renderer.render(scene, camera); }
@@ -398,7 +395,7 @@ function boot() {
     // camera: close and low at the plinth, pulls back as the trophy grows
     const settle = finished ? 1 : easeInOut(prog(T, 0.4, STAR_AT + 0.6));
     const ty = lerp(PLINTH_H + 0.4, TOP * 0.5, settle);
-    const dist = fitDist * lerp(0.7, 1, settle);
+    const dist = fitDist * lerp(0.86, 1, settle);
     tilt += (tiltT - tilt) * Math.min(1, dt * 3);
     camTarget.set(0, ty, 0);
     camera.position.set(0, ty + 0.9 + tilt * dist, dist);
