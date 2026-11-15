@@ -1183,7 +1183,21 @@ html[data-theme="light"] .services-list li { color: var(--gold); }
 
 /* minimalist 3D building canvas (licenses page) */
 #building-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.page-visual.building { min-height: 440px; }
+.page-visual.building { min-height: min(720px, calc(100svh - var(--nav-h) - 120px)); }
+@media (max-width: 860px) { .page-visual.building { min-height: 480px; } }
+#building-canvas { cursor: grab; }
+#building-canvas:active { cursor: grabbing; }
+/* live status of the tower (scene-building.js) */
+.bld-chip {
+  position: absolute; left: 16px; bottom: 16px; z-index: 2; pointer-events: none;
+  display: inline-flex; align-items: center; gap: 12px; padding: 8px 16px; border-radius: 9999px;
+  background: var(--glass); border: 1px solid var(--glass-edge);
+  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+  font-size: 14px; line-height: 20px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums;
+}
+html.is-webkit .bld-chip { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg) 82%, transparent); }
+.bld-hint { position: absolute; right: 16px; bottom: 24px; margin: 0; font-size: 12px; line-height: 16px; color: var(--muted); pointer-events: none; }
+@media (max-width: 480px) { .bld-hint { display: none; } }
 
 /* licensed-programs block: description (left) + photo gallery (right) */
 .programs-split { display: grid; grid-template-columns: 1fr 1.05fr; gap: 64px; align-items: start; }
