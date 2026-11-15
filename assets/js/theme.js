@@ -48,6 +48,7 @@
     // keep the 3D scenes in sync (fog / stars / building lines react to the theme)
     if (window.__SCENE && window.__SCENE.applyTheme) window.__SCENE.applyTheme(c);
     if (window.__BUILDING && window.__BUILDING.applyTheme) window.__BUILDING.applyTheme();
+    if (window.__TROPHY && window.__TROPHY.applyTheme) window.__TROPHY.applyTheme();
   }
 
   var saved;

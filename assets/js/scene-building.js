@@ -38,6 +38,13 @@ const BUILD_AT = 0.5, BUILD_END = BUILD_AT + (N - 1) * STAGGER + LAND;
 const CROWN_AT = BUILD_END - 0.2, CROWN_DUR = 0.9;
 const SCAN_AT = CROWN_AT + CROWN_DUR + 0.2, SCAN_DUR = 2.4, SCAN_EVERY = 10;
 
+/* glow on a transparent canvas: add the colour and an alpha equal to its
+   strength, so it reads on light pages too (plain additive blending wrote
+   alpha = 1 and showed black where the glow was faint) */
+const GLOW = { transparent: true, depthWrite: false, blending: THREE.CustomBlending,
+  blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.OneFactor, blendDstAlpha: THREE.OneFactor };
+const GLOW_OUT = "gl_FragColor = vec4(min(glow, vec3(1.0)), clamp(max(glow.r, max(glow.g, glow.b)), 0.0, 1.0));";
+
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const smooth = (a, b, v) => { const t = clamp01((v - a) / (b - a)); return t * t * (3 - 2 * t); };
 const easeOut = (t) => 1 - Math.pow(1 - t, 3);
@@ -294,14 +301,14 @@ function boot() {
   /* ---------- inspection halo that rides the beam ---------- */
   const haloU = { uA: U.scanA, uGold: GU.uGold };
   const halo = new THREE.Mesh(new THREE.PlaneGeometry(5, 5).rotateX(-Math.PI / 2), new THREE.ShaderMaterial({
-    uniforms: haloU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: haloU, ...GLOW,
     vertexShader: `varying vec2 vP; void main(){ vP = position.xz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
     fragmentShader: /* glsl */`
       uniform float uA; uniform vec3 uGold; varying vec2 vP;
       void main() {
         float r = length(vP);
         float g = exp(-pow((r - 1.45) * 3.2, 2.0)) * 0.9 + exp(-pow((r - 1.45) * 14.0, 2.0));
-        gl_FragColor = vec4(uGold * g * uA, 1.0);
+        vec3 glow = uGold * g * uA; ${GLOW_OUT}
       }`
   }));
   world.add(halo);

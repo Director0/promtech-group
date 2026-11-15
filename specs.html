@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=45" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=46" />
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -40,7 +40,8 @@
           <h1 id="page-title" data-reveal data-reveal-delay="1"></h1>
           <p class="lead" id="page-desc" data-reveal data-reveal-delay="2"></p>
         </div>
-        <div class="page-visual" data-reveal data-reveal-delay="1">
+        <div class="page-visual trophy" data-reveal data-reveal-delay="1">
+          <canvas id="trophy-canvas" aria-hidden="true"></canvas>
           <ul class="checklist" id="checklist"></ul>
         </div>
       </div>
@@ -111,7 +112,7 @@
   <!-- SCRIPTS -->
   <script src="assets/js/config.js?v=24"></script>
   <script src="assets/js/images.js?v=1"></script>
-  <script src="assets/js/theme.js?v=7"></script>
+  <script src="assets/js/theme.js?v=8"></script>
   <script src="assets/js/placeholder.js?v=2"></script>
   <script src="assets/js/cursor.js?v=2"></script>
   <script src="assets/js/cookie.js?v=1"></script>
@@ -119,6 +120,15 @@
   <script src="assets/js/fx.js?v=6"></script>
   <script src="assets/js/pagekit.js?v=2"></script>
   <script>document.documentElement.classList.remove("preload");</script>
-  <script type="module" src="assets/js/specs.js?v=4"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="assets/js/specs.js?v=5"></script>
+  <script type="module" src="assets/js/scene-trophy.js?v=3"></script>
 </body>
 </html>

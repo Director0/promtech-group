@@ -48,9 +48,23 @@ function buildChecklist(items) {
     });
   };
 
-  if (!("IntersectionObserver" in window)) { run(); return; }
+  // with the 3D trophy (scene-trophy.js) each item is ticked when its stage
+  // ring locks into the trophy; the timer below is only a safety net
+  const all = () => lis.forEach(li => li.classList.add("show", "done"));
+  window.__CHECKLIST = {
+    mark(i) { const li = lis[i]; if (!li) return; li.classList.add("show"); setTimeout(() => li.classList.add("done"), 220); },
+    all
+  };
+  const scene = !reduce && document.getElementById("trophy-canvas");
+  if (scene) lis.forEach(li => li.classList.add("show"));
+
+  if (!("IntersectionObserver" in window)) { scene ? all() : run(); return; }
   const io = new IntersectionObserver((ents) => {
-    ents.forEach(en => { if (en.isIntersecting) { run(); io.disconnect(); } });
+    ents.forEach(en => {
+      if (!en.isIntersecting) return;
+      io.disconnect();
+      if (scene) setTimeout(all, 9000); else run();
+    });
   }, { threshold: 0.4 });
   io.observe(ul);
 }

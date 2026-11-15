@@ -1199,6 +1199,24 @@ html.is-webkit .bld-chip { backdrop-filter: none; -webkit-backdrop-filter: none;
 .bld-hint { position: absolute; right: 16px; bottom: 24px; margin: 0; font-size: 12px; line-height: 16px; color: var(--muted); pointer-events: none; }
 @media (max-width: 480px) { .bld-hint { display: none; } }
 
+/* trophy scene (specs page): canvas fills the visual, checklist floats bottom-left */
+.page-visual.trophy { min-height: min(720px, calc(100svh - var(--nav-h) - 120px)); }
+#trophy-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; }
+#trophy-canvas:active { cursor: grabbing; }
+.page-visual.trophy .checklist {
+  position: absolute; left: 0; bottom: 16px; z-index: 2; pointer-events: none;
+  padding: 16px 20px; border-radius: 16px; min-width: 240px;
+  background: var(--glass); border: 1px solid var(--glass-edge);
+  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+html.is-webkit .page-visual.trophy .checklist { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--bg) 82%, transparent); }
+.page-visual.trophy .checklist .ck-label { font-size: 15px; line-height: 22px; }
+@media (max-width: 860px) {
+  .page-visual.trophy { min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+  #trophy-canvas { position: relative; inset: auto; height: 440px; }
+  .page-visual.trophy .checklist { position: static; }
+}
+
 /* licensed-programs block: description (left) + photo gallery (right) */
 .programs-split { display: grid; grid-template-columns: 1fr 1.05fr; gap: 64px; align-items: start; }
 .programs-copy .section-title { font-size: 48px; line-height: 1; }
