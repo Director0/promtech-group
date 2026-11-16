@@ -321,8 +321,8 @@ window.SITE_CONFIG = {
         "для архитектурного, конструктивного и инженерного разделов проекта."
       ],
       gallery: [
-        "assets/licenses/programs/lirasapr-lic.png"
-        // "assets/licenses/programs/revit.jpg",
+        "assets/licenses/programs/lirasapr-lic.png",
+        "assets/licenses/programs/lira-workcert.png"
         // "assets/licenses/programs/lira.jpg",
         // "assets/licenses/programs/nanocad.jpg"
       ]
@@ -384,10 +384,10 @@ window.SITE_CONFIG = {
         "оставляя рутинные операции автоматизированным алгоритмам."
       ],
       gallery: [
-        "assets/specs/ai/ai-1.jpg",
+        "assets/specs/ai/bimc.png",
         "assets/specs/ai/ai-2.jpg",
-        "assets/specs/ai/ai-3.jpg",
-        "assets/specs/ai/ai-4.jpg"
+        "assets/specs/ai/ai-3.jpg"
+        // "assets/specs/ai/ai-4.jpg"
       ]
     },
     specsTitle: "Ключевые показатели",
@@ -403,8 +403,9 @@ window.SITE_CONFIG = {
     achievementsTitle: "Награды и достижения",
     // Each achievement is a single image (diploma / certificate / award).
     achievements: [
+      { title: "Квалификационный Аттестат", src: "assets/achievements/quality-cert-georgiy.jpg" },
       { title: "Благодарность главы г. Оренбурга", src: "assets/achievements/mayor.png" },
-      { title: "Благодарность Администрации г. Оренбурга",               src: "assets/achievements/orengovern.png" },
+      { title: "Благодарность Администрации г. Оренбурга",               src: "assets/achievements/orengovern.jpg" },
       { title: "Благодарственное письмо Минстроя г. Оренбурга",           src: "assets/achievements/minconstruct.png" },
       { title: "Благодарность ГТУ г. Самары",               src: "assets/achievements/samarastu.png" }
     ]
