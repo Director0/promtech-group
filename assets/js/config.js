@@ -321,21 +321,24 @@ window.SITE_CONFIG = {
         "для архитектурного, конструктивного и инженерного разделов проекта."
       ],
       gallery: [
-        "assets/licenses/programs/autocad.jpg",
-        "assets/licenses/programs/revit.jpg",
-        "assets/licenses/programs/lira.jpg",
-        "assets/licenses/programs/nanocad.jpg"
+        "assets/licenses/programs/lirasapr-lic.png"
+        // "assets/licenses/programs/revit.jpg",
+        // "assets/licenses/programs/lira.jpg",
+        // "assets/licenses/programs/nanocad.jpg"
       ]
     },
     docsTitle: "Документы",
     // Each document is a single image (scan / photo). Add as many as you need.
     documents: [
-      { title: "Свидетельство СРО (проектирование)", src: "assets/licenses/sro-project.jpg" },
-      { title: "Свидетельство СРО (строительство)",   src: "assets/licenses/sro-build.jpg" },
-      { title: "Лицензия МЧС",                          src: "assets/licenses/mchs.jpg" },
-      { title: "Допуск к особо опасным объектам",       src: "assets/licenses/hazard.jpg" }
+      { title: "Реестр Проектировщиков НОПРИЗ стр 1", src: "assets/licenses/nopriz-proj1.jpg" },
+      { title: "Реестр Проектировщиков НОПРИЗ стр 2",   src: "assets/licenses/nopriz-proj2.jpg" },
+      { title: "Реестр Изысканий НОПРИЗ стр 1", src: "assets/licenses/nopriz.jpg" },
+      { title: "Реестр Изысканий НОПРИЗ стр 2",   src: "assets/licenses/nopriz2.jpg" },
+      { title: "Свидетельство СРО",                          src: "assets/licenses/sro-apo.jpg" },
+      { title: "Лицензия мин. культуры стр 1",       src: "assets/licenses/culture.jpg" },
+      { title: "Лицензия мин. культуры стр 2",       src: "assets/licenses/culture2.jpg" }
     ]
-  },
+  }, // Свидетельство СРО
 
   /* ---------------------------------------------------------------------------
      6c) SPECS / ACHIEVEMENTS PAGE  (specs.html)
@@ -778,38 +781,37 @@ window.SITE_CONFIG = {
       year: "2025",
       location: "пгт. Радумля, Московская обл., Россия",
       status: "Строится",
-      summary: "ЖК «Долгие горы» в Оренбурге, построенный СЗ «ЛИСТ»",
+      summary: "2-х этажный ресторан «Вкусно - и точка» в районе ТЦ «София» пгт. Радумля, МО",
       thumb: "./assets/projects/inf-mcdonaldsr/th1.png",
       heroType: "image",
       heroSrc: "./assets/projects/inf-mcdonaldsr/th.png",
       intro:
-        "ЖК «Долгие горы» в Оренбурге, построенный СЗ «ЛИСТ» — это сданный многоквартирный дом типовой застройки. " +
-        "В комплексе 64 квартиры: 40 однокомнатных, 8 двухкомнатных и 16 трёхкомнатных.",
+        "«Вкусно - и точка» (пгт. Радумля) - это новый ресторан в непосредственной близости с ТЦ София и складским комплексом" +
+        "",
       description: [
-        "Жилая площадь составляет 3 239 квадратных метров. В комплексе также предусмотрено 6 нежилых помещений. Максимальная этажность здания — 10 этажей. " +
+        "Особенности и плюсы расположения: \n - Новый ресторан в непосредственной близости с ТЦ София и складским комплексом \n - 78 парковочных машино мест \n - примыкание к Ленинградскому шоссе (въезд/выезд)." +
         "",
         "" +
         ""
       ],
       facts: [
-        { value: "3239", label: "m² жилой площади" },
-        { value: "64", label: "квартиры" },
-        { value: "до 10",  label: "этажей" }
+        { value: "415 m²", label: "полезная площадь" },
+        { value: "78", label: "парковочных машино мест" },
+        { value: "30 км",  label: "от МКАД" }
       ],
       specs: [
-        { label: "Тип проекта",  value: "Жилой дом" },
-        { label: "Жилая площадь",    value: "3239 m²" },
-        { label: "Расположение",     value: "Микрорайон 20а" },
-        { label: "Cladding",      value: "Untreated larch" },
-        { label: "Heating",       value: "Ground-source heat pump" },
-        { label: "Duration",      value: "11 months (2023–2024)" },
+        { label: "Тип проекта",  value: "Объект инфраструктуры" },
+        { label: "Полезная площадь",    value: "415 m²" },
+        { label: "Расположение",     value: "Московская область, пересечение Ленинградское шоссе и А107, 30 км. от МКАД" },
+        { label: "Технология",      value: "-" },
+        { label: "Застройщик",       value: "-" },
         { label: "Energy class",  value: "A+ / near passive" }
       ],
       services: ["Architecture", "Timber engineering", "Main contractor", "Renewables"],
       gallery: [
-        "./assets/projects/bof-sd20a/th.png",
-        "./assets/projects/bof-sd20a/ren2.png",
-        "./assets/projects/bof-sd20a/r2.png"
+        "./assets/projects/inf-mcdonaldsr/±renn1.jpg",
+        "./assets/projects/inf-mcdonaldsr/±renn2.jpg",
+        "./assets/projects/inf-mcdonaldsr/±renn3.jpg"
       ]
     },
     {
