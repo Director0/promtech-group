@@ -143,7 +143,7 @@
     if (!lb || !lbImg) return;
     document.addEventListener("click", function (e) {
       var img = e.target.closest("[data-zoom]");
-      if (img && img.src) { lbImg.src = img.dataset.full || img.src; lb.classList.add("open"); document.body.style.overflow = "hidden"; }
+      if (img && img.src) { var orig = img.dataset.full || img.src; lbImg.onerror = function () { lbImg.onerror = null; lbImg.src = orig; }; lbImg.src = window.optImg ? optImg(orig, "full") : orig; lb.classList.add("open"); document.body.style.overflow = "hidden"; }
       if (e.target.closest("#lightbox-close") || e.target === lb) {
         lb.classList.remove("open"); document.body.style.overflow = "";
       }

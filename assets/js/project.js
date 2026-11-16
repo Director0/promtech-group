@@ -240,7 +240,7 @@ function initLightbox() {
   const lb = $("#lightbox"), lbImg = $("#lightbox-img");
   document.addEventListener("click", (e) => {
     const img = e.target.closest("[data-zoom]");
-    if (img) { lbImg.src = img.dataset.full || img.src; lb.classList.add("open"); document.body.style.overflow = "hidden"; }
+    if (img) { const orig = img.dataset.full || img.src; lbImg.onerror = () => { lbImg.onerror = null; lbImg.src = orig; }; lbImg.src = O(orig, "full"); lb.classList.add("open"); document.body.style.overflow = "hidden"; }
     if (e.target.closest("#lightbox-close") || e.target === lb) {
       lb.classList.remove("open"); document.body.style.overflow = "";
     }

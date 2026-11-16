@@ -7,3 +7,6 @@ Thumbs.db
 
 # dependencies (only if you add a build step later)
 node_modules/
+
+# markers of tools/optimize-images.py (a full-size copy that would not be smaller)
+assets/opt/**/*.skip

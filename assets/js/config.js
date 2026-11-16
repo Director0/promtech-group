@@ -810,9 +810,9 @@ window.SITE_CONFIG = {
       ],
       services: ["Architecture", "Timber engineering", "Main contractor", "Renewables"],
       gallery: [
-        "./assets/projects/inf-mcdonaldsr/±renn1.jpg",
-        "./assets/projects/inf-mcdonaldsr/±renn2.jpg",
-        "./assets/projects/inf-mcdonaldsr/±renn3.jpg"
+        "./assets/projects/inf-mcdonaldsr/renn1.jpg",
+        "./assets/projects/inf-mcdonaldsr/renn2.jpg",
+        "./assets/projects/inf-mcdonaldsr/renn3.jpg"
       ]
     },
     {
