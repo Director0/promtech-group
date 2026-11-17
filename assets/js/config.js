@@ -574,10 +574,7 @@ window.SITE_CONFIG = {
         "A small infill development of eight family townhouses that turn their backs on the street and " +
         "open onto a shared, planted courtyard — a quiet block within the block.",
       description: [
-        "Density without compromise: each house gets private outdoor space, cross-ventilation and morning " +
-        "light, while the shared courtyard does the social work of a traditional Barcelona patio.",
-        "Built in two phases to keep the first residents undisturbed, the scheme uses a warm lime render " +
-        "and deep window reveals to handle the Mediterranean sun."
+        "Конструктивные решения здания разработаны, опираясь на объемно-планировочную компоновку здания, на основании статического расчета модели с учетом инженерно-геологических условий площадки строительства. \n\n При выполнении расчетов конструктивных элементов жилого здания использовалось специализированное программное обеспечение «Расчетный комплекс ЛИРА-САПР 2025 "
       ],
       facts: [
         { value: "8",  label: "townhouses" },
@@ -825,7 +822,7 @@ window.SITE_CONFIG = {
       summary: "A glass-and-stone family home that follows the sun across the lake.",
       thumb: "./assets/projects/bof-yrkina/th.png",
       heroType: "image",
-      heroSrc: "https://picsum.photos/seed/villa-aurora-hero/1920/1080",
+      heroSrc: "./assets/projects/bof-yrkina/render1.png",
       intro:
         "A 420 m² lakeside residence designed around a single idea: never lose the light. " +
         "Floor-to-ceiling glazing wraps the living level while a stone plinth anchors the home into the slope.",
